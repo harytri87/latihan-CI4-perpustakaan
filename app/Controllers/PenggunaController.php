@@ -13,12 +13,20 @@ class PenggunaController extends BaseController
 	public function index()
 	{
 		$penggunaModel = new PenggunaModel();
+		
 		$data = [
-			'pengguna_list' => $penggunaModel->getPengguna(),
-			'pager'     => $penggunaModel->pager,
 			'title'     => 'Data Pengguna | Perpustakaan',
 			'penomoran' => 20	// samain sama paginate() di model getPengguna()
 		];
+
+		$cari = $this->request->getGet('cari');	// dari name-nya input type text
+		if ($cari == null) {
+			$data['pengguna_list'] = $penggunaModel->getPengguna();
+			$data['pager']				 = $penggunaModel->pager;
+		} else {
+			$data['pengguna_list'] = $penggunaModel->cariPengguna($cari);
+			$data['pager']				 = $penggunaModel->pager;
+		}
 
 		return view('halaman/pengguna/index', $data);
 	}

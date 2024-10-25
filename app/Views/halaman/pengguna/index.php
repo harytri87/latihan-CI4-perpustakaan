@@ -6,9 +6,15 @@
 
   <div class="card container my-4">
     <div class="card-body">
-      <div class="row mb-3">
+      <div class="row mb-3 justify-content-between">
         <div class="col">
           <h4>Pengguna</h4>
+        </div>
+        <div class="col">
+          <form action="" method="get" class="d-flex" role="search">
+              <input class="form-control me-2" type="search" name="cari" placeholder="Cari nama / email pengguna" aria-label="Cari pengguna">
+              <button class="btn btn-outline-success" type="submit">Cari</button>
+          </form>
         </div>
         <div class="col">
           <a href="<?= route_to('penggunaTambahForm') ?>" class="btn btn-primary float-end">Tambah</a>
@@ -68,7 +74,7 @@
           </div>
 
         <?php else: ?>
-						<h4>Tidak ada pengguna yang tersedia</h4>
+						<h4>Data pengguna tidak ditemukan</h4>
         <?php endif ?>
       </div>
     </div>

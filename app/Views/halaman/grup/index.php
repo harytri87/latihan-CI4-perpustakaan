@@ -64,7 +64,7 @@
           </div>
 
         <?php else: ?>
-						<h4>Tidak ada grup yang tersedia</h4>
+						<h4>Data grup tidak ditemukan</h4>
         <?php endif ?>
       </div>
     </div>

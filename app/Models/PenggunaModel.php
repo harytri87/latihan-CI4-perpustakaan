@@ -95,4 +95,13 @@ class PenggunaModel extends Model
 
         return $this->paginate(20);
 	}
+
+    public function cariPengguna(string $cari)
+    {
+        $this->select('*')->join('grup', 'grup.grup_id = pengguna.grup_id')->orderBy('pengguna.grup_id, pengguna.pengguna_nama');
+        $this->like('pengguna_email', $cari);
+        $this->orLike('pengguna_nama', $cari);
+
+        return $this->paginate(20);
+    }
 }
