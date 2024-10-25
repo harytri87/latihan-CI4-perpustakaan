@@ -11,11 +11,11 @@ class GrupController extends BaseController
 {
     public function index()
     {
-        $model = new GrupModel();
+        $grupModel = new GrupModel();
         $data = [
-            'grup_list' => $model->paginate(5),
-            'pager'     => $model->pager,
-            'title'     => 'Data Grup',
+            'grup_list' => $grupModel->paginate(5),
+            'pager'     => $grupModel->pager,
+            'title'     => 'Data Grup | Perpustakaan',
         ];
 
         return view('halaman/grup/index', $data);
@@ -24,12 +24,14 @@ class GrupController extends BaseController
     // Ini ga kepake buat grup, sama kayak edit()
     public function show($grup_id = null)
     {
-        $model = new GrupModel();
-        $data['grup'] = $model->getGrup($grup_id);
+        $grupModel = new GrupModel();
+        $data['grup'] = $grupModel->getGrup($grup_id);
 
         if ($data['grup'] === null) {
             throw new PageNotFoundException('Tidak dapat menemukan data grup: ' . $grup_id);
         }
+
+        $data['title'] = 'Rincian Grup | Perpustakaan';
 
         return view('halaman/grup/rincian', $data);
     }
@@ -40,7 +42,7 @@ class GrupController extends BaseController
         helper('form');
 
         $data = [
-            // 'news_list' => $model->getNews(),
+            // 'news_list' => $grupModel->getNews(),
             'title'     => 'Grup Baru | Perpustakaan',
         ];
 
@@ -52,7 +54,7 @@ class GrupController extends BaseController
     {
         helper('form');
 
-        $grup = new GrupModel();
+        $grupModel = new GrupModel();
 
         // Ngambil semua data yg dikirimin dari post, termasuk csrf token sama method dari input hiddennya
         // Bisa langsung update pake $dataPost, bisa jg bikin variable baru yg isinya relevan buat table
@@ -63,8 +65,8 @@ class GrupController extends BaseController
 			'grup_keterangan' => $dataPost['grup_keterangan']
 		];
 
-        if ($grup->save($data) === false) {
-            return view('halaman/grup/tambah', ['errors' => $grup->errors()]);
+        if ($grupModel->save($data) === false) {
+            return redirect()->back()->with('errors', $grupModel->errors())->withInput();
         }
 
         return redirect()->route('grupIndex')->with('message', 'Grup berhasil ditambahkan!');
@@ -75,12 +77,14 @@ class GrupController extends BaseController
     {
         helper('form');
 
-        $model = new GrupModel();
-        $data['grup'] = $model->getGrup($grup_id);
+        $grupModel = new GrupModel();
+        $data['grup'] = $grupModel->getGrup($grup_id);
 
         if ($data['grup'] === null) {
             throw new PageNotFoundException('Tidak dapat menemukan data grup: ' . $grup_id);
         }
+
+        $data['title'] = 'Ubah Data Grup | Perpustakaan';
 
         return view('halaman/grup/ubah', $data);
     }
@@ -90,9 +94,9 @@ class GrupController extends BaseController
     {
         helper('form');
 
-        $model = new GrupModel();
-        // $data = $model->getGrup($grup_id);
-        $data = $model->find($grup_id);
+        $grupModel = new GrupModel();
+        // $data = $grupModel->getGrup($grup_id);
+        $data = $grupModel->find($grup_id);
         // sama aja
 
         if (!$data) {
@@ -105,8 +109,8 @@ class GrupController extends BaseController
 			'grup_keterangan' => $dataPost['grup_keterangan']
 		];
 
-        if ($model->update($grup_id, $data) === false) {
-			return redirect()->back()->with('errors', $model->errors())->withInput();
+        if ($grupModel->update($grup_id, $data) === false) {
+			return redirect()->back()->with('errors', $grupModel->errors())->withInput();
 		}
 
 		return redirect()->route('grupIndex')->with('message', 'Data kategori berhasil dubah!');
@@ -115,17 +119,17 @@ class GrupController extends BaseController
     
     public function delete($grup_id = null)
     {
-        $model = new GrupModel();
-        $data = $model->find($grup_id);
+        $grupModel = new GrupModel();
+        $data = $grupModel->find($grup_id);
 
         if (!$data) {
             return redirect()->route('grupIndex')->with('message', 'Data kategori tidak tersedia.');
         }
 
-        if ($model->delete($grup_id) === false) {
-			return redirect()->back()->with('errors', $model->errors())->withInput();
+        if ($grupModel->delete($grup_id) === false) {
+			return redirect()->back()->with('errors', $grupModel->errors())->withInput();
 		}
 
-		return redirect()->route('grupIndex')->with('message', 'Data kategori berhasil dihapus!');
+		return redirect()->route('grupIndex')->with('error', 'Data kategori berhasil dihapus!');
     }
 }

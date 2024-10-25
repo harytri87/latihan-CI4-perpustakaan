@@ -13,13 +13,13 @@
         <?= csrf_field() ?>
         <!-- Nama Grup -->
         <div class="form-floating mb-2">
-          <input type="nama" name="grup_nama" id="floatingNamaInput" class="form-control" placeholder="Nama Grup" required maxlength="100" value="<?= set_value('grup_nama') ?>">
+          <input type="text" name="grup_nama" id="floatingNamaInput" class="form-control" placeholder="Nama Grup" required maxlength="100" value="<?= set_value('grup_nama') ?>">
           <label for="floatingNamaInput">Nama Grup</label>
         </div>
 
         <!-- Keterangan Grup -->
         <div class="form-floating mb-2">
-          <input type="nama" name="grup_keterangan" id="floatingKeteranganInput" class="form-control" placeholder="Keterangan Grup" required maxlength="100" value="<?= set_value('grup_keterangan') ?>">
+          <input type="text" name="grup_keterangan" id="floatingKeteranganInput" class="form-control" placeholder="Keterangan Grup" required maxlength="100" value="<?= set_value('grup_keterangan') ?>">
           <label for="floatingKeteranganInput">Keterangan Grup</label>
         </div>
 
