@@ -6,6 +6,7 @@
   <title><?= isset($title) ? esc($title) : 'Perpustakaan'; ?></title>
   <link rel="stylesheet" href="<?= base_url('bootstrap/css/bootstrap.min.css') ?>">
   <link rel="stylesheet" href="<?= base_url('bootstrap-icons/font/bootstrap-icons.min.css') ?>">
+  <link rel="stylesheet" href="<?= base_url('style.css') ?>">
 </head>
 <body>
   <?php include('inc/navbar.php') ?>

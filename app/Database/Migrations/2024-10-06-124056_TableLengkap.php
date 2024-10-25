@@ -29,7 +29,7 @@ class TableLengkap extends Migration
             'pengguna_nama'     => ['type' => 'varchar', 'constraint' => 255],
             'pengguna_foto'     => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
             'grup_id'           => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => '3'],
-            'pengguna_status'   => ['type' => 'varchar', 'constraint' => 30, 'default' => 'aktif'],
+            'pengguna_status'   => ['type' => 'varchar', 'constraint' => 30, 'default' => 'Aktif'],
             'created_at datetime default current_timestamp',
             'updated_at datetime default current_timestamp on update current_timestamp'
         ]);
