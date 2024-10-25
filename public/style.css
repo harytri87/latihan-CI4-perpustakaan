@@ -1,0 +1,21 @@
+div.foto-preview {
+  margin: auto;
+  height: 160px;
+  width: 160px;
+  border-radius: 50%;
+}
+
+div.foto-profil {
+  margin: auto;
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+  display: none;
+}
+
+img.foto-profil {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}

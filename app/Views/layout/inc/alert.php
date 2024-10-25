@@ -1,14 +1,15 @@
+
 <!-- Semua jenis pesan -->
-<?php if (session('message') !== null) : ?>
+<?php if (session()->getFlashdata('message') !== null) : ?>
   <div class="alert alert-success alert-dismissible fade show" role="alert">
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     <div class="alert-body">
-      <?= session('message') ?>
+      <?= session()->getFlashdata('message') ?>
     </div>
   </div>
 <?php endif ?>
 
-<!-- Semua jenis error -->
+<!-- Semua jenis errors -->
 <?php if (session()->getFlashdata('errors') !== null) : ?>
   <div class="alert alert-danger alert-dismissible fade show" role="alert">
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -19,3 +20,26 @@
     <?php endforeach ?>
   </div>
 <?php endif ?>
+
+<!-- Errornya cuma 1 -->
+<?php if (session()->getFlashdata('error') !== null) : ?>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      <div class="alert-body">
+        <?= session()->getFlashdata('error') ?>
+      </div>
+  </div>
+<?php endif ?>
+
+<!--
+	yang di atas kalo controllernya return redirect()
+	yang di bawah contoh Kalo di controllernya return view
+-->
+
+<?php 
+	// if (! empty($errors)) {
+	// 	foreach ($errors as $field => $error) {
+	// 		esc($error);
+	// 	}
+	// }
+?>

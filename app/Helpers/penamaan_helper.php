@@ -1,5 +1,7 @@
 <?php
 
+// Kayaknya semua pake formatJudul() aja. Nama orang juga ada yang pake Al-
+
 function formatNama($nama)
 {
   // Semua input jadiin huruf kecil, takutnya ada 1 huruf kapital yang nyempil di tengah kata
