@@ -13,30 +13,30 @@
         <input type="hidden" name="_method" value="PUT"/>
         <!-- Nama -->
         <div class="form-floating mb-2">
-          <input type="text" name="pengguna_nama" id="floatingNamaInput" class="form-control" placeholder="Nama" required minlength="4" maxlength="100" value="<?= old('pengguna_nama') !== null ? old('pengguna_nama') : esc($pengguna['pengguna_nama']) ?>">
+          <input type="text" name="pengguna_nama" id="floatingNamaInput" class="form-control" placeholder="Nama" required maxlength="100" value="<?= old('pengguna_nama') !== null ? old('pengguna_nama') : esc($pengguna['pengguna_nama']) ?>">
           <label for="floatingNamaInput">Nama</label>
         </div>
 
         <!-- Email -->
         <div class="form-floating mb-2">
-          <input type="email" name="pengguna_email" id="floatingEmailInput" class="form-control" placeholder="Email" required minlength="8" maxlength="100" value="<?= old('pengguna_email') !== null ? old('pengguna_email') : esc($pengguna['pengguna_email']) ?>">
+          <input type="email" name="pengguna_email" id="floatingEmailInput" class="form-control" placeholder="Email" required maxlength="100" value="<?= old('pengguna_email') !== null ? old('pengguna_email') : esc($pengguna['pengguna_email']) ?>">
           <label for="floatingEmailInput">Email</label>
         </div>
 
         <!-- Username -->
         <div class="form-floating mb-2">
-          <input type="text" name="pengguna_username" id="floatingUsernameInput" class="form-control" placeholder="Username" required minlength="4" maxlength="100" value="<?= old('pengguna_username') !== null ? old('pengguna_username') : esc($pengguna['pengguna_username']) ?>">
+          <input type="text" name="pengguna_username" id="floatingUsernameInput" class="form-control" placeholder="Username" required maxlength="100" value="<?= old('pengguna_username') !== null ? old('pengguna_username') : esc($pengguna['pengguna_username']) ?>">
           <label for="floatingUsernameInput">Username</label>
         </div>
         <!-- Password -->
         <div class="form-floating mb-2">
-          <input type="password" name="pengguna_password" id="floatingPasswordInput" class="form-control" minlength="8" maxlength="100">
+          <input type="password" name="pengguna_password" id="floatingPasswordInput" class="form-control" maxlength="100">
           <label for="floatingPasswordInput">Password, biarkan kosong jika tidak ingin diubah</label>
         </div>
         
         <!-- Ulangi Password -->
         <div class="form-floating mb-2">
-          <input type="password" name="password_ulang" id="floatingPasswordUlangInput" class="form-control" minlength="8" maxlength="100">
+          <input type="password" name="password_ulang" id="floatingPasswordUlangInput" class="form-control" maxlength="100">
           <label for="floatingPasswordUlangInput">Ulangi Password, biarkan kosong jika tidak ingin diubah</label>
         </div>
         

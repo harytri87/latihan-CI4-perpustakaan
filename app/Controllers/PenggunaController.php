@@ -71,22 +71,22 @@ class PenggunaController extends BaseController
 
 		// Validasi file
 		$validationRule = [
-            'pengguna_foto' => [
-                // 'label' => 'Foto Profil',	// ini kalo ga pake data 'errors' bakal kepake
-                'rules' => [
-                    'is_image[pengguna_foto]',
-                    'mime_in[pengguna_foto,image/jpg,image/jpeg,image/png,image/webp]',
-                    'max_size[pengguna_foto,400]',
-                    'max_dims[pengguna_foto,1024,768]',
+			'pengguna_foto' => [
+					// 'label' => 'Foto Profil',	// ini kalo ga pake data 'errors' bakal kepake
+					'rules' => [
+							'is_image[pengguna_foto]',
+							'mime_in[pengguna_foto,image/jpg,image/jpeg,image/png,image/webp]',
+							'max_size[pengguna_foto,400]',
+							'max_dims[pengguna_foto,1080,1080]',
                 ],
 				'errors' => [
 					'is_image'    => 'Harap pilih gambar foto profil',
 				    'mime_in'     => 'File gambar tidak didukung',
-				    'max_size'    => 'File gambar maksimal 100 KB',
-				    'max_dims'    => 'Resolusi gambar maksimal 1024x768 pixel'
+				    'max_size'    => 'File gambar maksimal 400 KB',
+				    'max_dims'    => 'Resolusi gambar maksimal 1080x1080 pixel'
 				]
-            ],
-        ];
+			],
+		];
         if (! $this->validateData([], $validationRule)) {
 			return redirect()->route('penggunaTambahForm')->with('errors', $this->validator->getErrors())->withInput();
         }
@@ -106,10 +106,22 @@ class PenggunaController extends BaseController
 			}
 		}
 
+		// Format huruf besar/kecil nama
+		$dataPost['pengguna_nama'] = formatJudul($dataPost['pengguna_nama']);
+
 		// Isi database pake validasi yang di model
 		if ($penggunaModel->save($dataPost) === false) {
+			// Data gagal masuk ke database tapi foto udah masuk ke folder duluan
+			if ($foto != "") {
+				$fotoBaru = ROOTPATH . 'public/uploads/profil/' . $dataPost['pengguna_foto'];
+				unlink($fotoBaru);
+			}
+
 			return redirect()->route('penggunaTambahForm')->with('errors', $penggunaModel->errors())->withInput();
 		}
+
+		// Nanti di controller buku pake validasi di luar query save/update aja biar ga banyak ngulang ngecek foto.
+		// Eh tapi nanti kalo gagal masukin ke database selain gara2 validasi, foto tetep pindah ke folder sih 
 
 		return redirect()->route('penggunaIndex')->with('message', 'Pengguna berhasil ditambahkan!');
 	}
@@ -152,7 +164,7 @@ class PenggunaController extends BaseController
 			$dataPost['pengguna_username'] === $pengguna['pengguna_username']
 				? "" : 'pengguna_username' => $dataPost['pengguna_username'],
 
-			'pengguna_nama'     => $dataPost['pengguna_nama'],
+			'pengguna_nama'     => formatJudul($dataPost['pengguna_nama']),
 			'grup_id'           => $dataPost['grup_id']
 		];
 
@@ -167,37 +179,30 @@ class PenggunaController extends BaseController
 
 		// Validasi file
 		$validationRule = [
-            'pengguna_foto' => [
-                // 'label' => 'Foto Profil',	// ini kalo ga pake data 'errors' bakal kepake
-                'rules' => [
-                    'is_image[pengguna_foto]',
-                    'mime_in[pengguna_foto,image/jpg,image/jpeg,image/png,image/webp]',
-                    'max_size[pengguna_foto,400]',
-                    'max_dims[pengguna_foto,1024,768]',
-                ],
+			'pengguna_foto' => [
+					// 'label' => 'Foto Profil',	// ini kalo ga pake data 'errors' bakal kepake
+					'rules' => [
+							'is_image[pengguna_foto]',
+							'mime_in[pengguna_foto,image/jpg,image/jpeg,image/png,image/webp]',
+							'max_size[pengguna_foto,400]',
+							'max_dims[pengguna_foto,1080,1080]',
+					],
 				'errors' => [
 					'is_image'    => 'Harap pilih gambar foto profil',
 				    'mime_in'     => 'File gambar tidak didukung',
-				    'max_size'    => 'File gambar maksimal 100 KB',
-				    'max_dims'    => 'Resolusi gambar maksimal 1024x768 pixel'
+				    'max_size'    => 'File gambar maksimal 400 KB',
+				    'max_dims'    => 'Resolusi gambar maksimal 1080x1080 pixel'
 				]
-            ],
-        ];
-        if (! $this->validateData([], $validationRule)) {
+			],
+		];
+    if (! $this->validateData([], $validationRule)) {
 			return redirect()->back()->with('errors', $this->validator->getErrors())->withInput();
-        }
+    }
 
 		// Cek upload foto
 		$foto = $this->request->getFile('pengguna_foto');
 		// dd($foto);
 		if ($foto != "") {
-			// Ngehapus foto lama, kalo ada
-			$fotoLama = ROOTPATH . 'public/uploads/profil/' . $pengguna['pengguna_foto'];
-			if (file_exists($fotoLama)) {
-				unlink($fotoLama);
-				// Katanya ada juga helper dari CI buat ngehapus. Tapi biar ga ngeload helper, pake bawaan PHPnya aja
-			}
-
 			// Mindahin foto
 			$foto->move(ROOTPATH . 'public/uploads/profil/', $foto->getRandomName());
 			if ($foto->hasMoved()) {
@@ -212,8 +217,27 @@ class PenggunaController extends BaseController
 		// dd($data);
 		// Isi database pake validasi yang di model
 		if ($penggunaModel->update($pengguna_id, $data) === false) {
+			// Data gagal masuk ke database tapi foto udah masuk ke folder duluan
+			if ($foto != "") {
+				$fotoBaru = ROOTPATH . 'public/uploads/profil/' . $data['pengguna_foto'];
+				unlink($fotoBaru);
+			}
+
 			return redirect()->back()->with('errors', $penggunaModel->errors())->withInput();
 		}
+
+		// Baru dijalanin kalo ngupdate data berhasil
+		if ($foto != "") {
+			// Ngehapus foto lama, kalo ada
+			$fotoLama = ROOTPATH . 'public/uploads/profil/' . $pengguna['pengguna_foto'];
+			if (file_exists($fotoLama)) {
+				unlink($fotoLama);
+				// Katanya ada juga helper dari CI buat ngehapus. Tapi biar ga ngeload helper, pake bawaan PHPnya aja
+			}
+		}
+
+
+		// Banyak ngecek foto gitu gara2 validasi data lainnya baru dicek pas jalanin model-update()
 
 		return redirect()->route('penggunaIndex')->with('message', 'Pengguna berhasil ditambahkan!');
 	}
