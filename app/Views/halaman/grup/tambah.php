@@ -9,8 +9,7 @@
 
       <?= $this->include('layout/inc/alert.php') ?>
 
-      <form action="<?= route_to('grupTambahAction') ?>" method="post">
-        <?= csrf_field() ?>
+      <?= form_open(route_to('grupTambahAction')) ?>
         <!-- Nama Grup -->
         <div class="form-floating mb-2">
           <input type="text" name="grup_nama" id="floatingNamaInput" class="form-control" placeholder="Nama Grup" required maxlength="100" value="<?= set_value('grup_nama') ?>">

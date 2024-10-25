@@ -9,8 +9,7 @@
 
       <?= $this->include('layout/inc/alert.php') ?>
 
-      <form action="<?= route_to('grupUbahAction', esc($grup['grup_id'])) ?>" method="post">
-        <?= csrf_field() ?>
+      <?= form_open(route_to('grupUbahAction', esc($grup['grup_id']))) ?>
         <input type="hidden" name="_method" value="PUT"/>
         <!-- Nama Grup -->
         <div class="form-floating mb-2">

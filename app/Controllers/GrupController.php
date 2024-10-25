@@ -39,8 +39,6 @@ class GrupController extends BaseController
     
     public function new()
     {
-        helper('form');
-
         $data = [
             // 'news_list' => $grupModel->getNews(),
             'title'     => 'Grup Baru | Perpustakaan',
@@ -52,8 +50,6 @@ class GrupController extends BaseController
     
     public function create()
     {
-        helper('form');
-
         $grupModel = new GrupModel();
 
         // Ngambil semua data yg dikirimin dari post, termasuk csrf token sama method dari input hiddennya
@@ -75,8 +71,6 @@ class GrupController extends BaseController
     
     public function edit($grup_id = null)
     {
-        helper('form');
-
         $grupModel = new GrupModel();
         $data['grup'] = $grupModel->getGrup($grup_id);
 
@@ -92,8 +86,6 @@ class GrupController extends BaseController
     
     public function update($grup_id = null)
     {
-        helper('form');
-
         $grupModel = new GrupModel();
         // $data = $grupModel->getGrup($grup_id);
         $data = $grupModel->find($grup_id);
