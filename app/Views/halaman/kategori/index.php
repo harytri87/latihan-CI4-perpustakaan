@@ -8,22 +8,22 @@
     <div class="card-body">
       <div class="row mb-3 justify-content-between">
         <div class="col-12 mb-3">
-          <h4>Pengguna</h4>
+          <h4>Kategori</h4>
         </div>
         <div class="col-9">
           <form action="" method="get" class="d-flex" role="search">
-              <input class="form-control me-2" type="search" name="cari" placeholder="Cari nama / email pengguna" aria-label="Cari pengguna">
-              <button class="btn btn-outline-success" type="submit">Cari</button>
+              <input class="form-control me-2" type="search" name="cari" placeholder="Cari kategori" aria-label="Cari kategori">
+              <button class="btn btn-outline-primary" type="submit">Cari</button>
           </form>
         </div>
         <div class="col">
-          <a href="<?= route_to('penggunaTambahForm') ?>" class="btn btn-primary float-end">Tambah</a>
+          <a href="<?= route_to('kategoriTambahForm') ?>" class="btn btn-primary float-end">Tambah</a>
         </div>
       </div>
 
       <div class="row table-responsive">
             
-        <?php if ($pengguna_list !== []): 
+        <?php if ($kategori_list !== []): 
           $no = 1 + ($penomoran * ($pager->getCurrentPage() - 1));
         ?>
           <table class="table table-bordered table-striped table-hover">
@@ -31,30 +31,26 @@
               <tr>
                 <th class="text-center">#</th>
                 <th>Nama</th>
-                <th>Email</th>
-                <th>Status</th>
+                <th>Rincian</th>
                 <th class="text-center">Aksi</th>
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($pengguna_list as $pengguna_item): ?>
+              <?php foreach ($kategori_list as $kategori_item): ?>
 
                 <tr>
                   <td class="text-center"><?= $no++ ?></td>
-                  <td><?= esc($pengguna_item['pengguna_nama']) ?></td>
-                  <td><?= esc($pengguna_item['pengguna_email']) ?></td>
-                  <td><?= esc($pengguna_item['grup_nama']) . " - " . esc($pengguna_item['pengguna_status']) ?></td>
+                  <td><?= esc($kategori_item['kategori_nama']) ?></td>
+                  <td><?= esc($kategori_item['kategori_rincian']) ?></td>
                   <td class="text-center" style="width: 21%;">
-                    <a href="<?= route_to('penggunaRincian', esc($pengguna_item['pengguna_username'])) ?>" class="btn btn-primary btn-sm">Rincian</a>
-
                     <abbr title="ubah data">
-                      <a href="<?= route_to('penggunaUbahForm', esc($pengguna_item['pengguna_username'])) ?>" class="btn btn-warning btn-sm"><i class="bi bi-pencil-fill"></i></a>
+                      <a href="<?= route_to('kategoriUbahForm', esc($kategori_item['kategori_link'])) ?>" class="btn btn-warning btn-sm"><i class="bi bi-pencil-fill"></i></a>
                     </abbr>
 
                     <!-- Button trigger modal -->
 										<!-- Fungsi & modalnya di layout/layout_utama.php -->
                     <abbr title="hapus data">
-											<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapusData" data-bs-nama="<?= esc($pengguna_item['pengguna_nama']) ?>" data-bs-url="<?= url_to('penggunaHapus', esc($pengguna_item['pengguna_id'])) ?>">
+											<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapusData" data-bs-nama="<?= esc($kategori_item['kategori_nama']) ?>" data-bs-url="<?= url_to('kategoriHapus', esc($kategori_item['kategori_id'])) ?>">
 												<i class="bi bi-trash"></i>
 											</button>
                     </abbr>
@@ -66,7 +62,7 @@
           </table>
 
           <div class="col">
-						<i class="fs-6 fw-lighter">Menampilkan <?=empty($pengguna_list) ? 0 : 1 + ($penomoran * ($pager->getCurrentPage() - 1))?> - <?=$no-1?> dari <?=$pager->getTotal()?> data</i>
+						<i class="fs-6 fw-lighter">Menampilkan <?=empty($kategori_list) ? 0 : 1 + ($penomoran * ($pager->getCurrentPage() - 1))?> - <?=$no-1?> dari <?=$pager->getTotal()?> data</i>
           </div>
 
           <div class="col">
@@ -74,7 +70,7 @@
           </div>
 
         <?php else: ?>
-						<h4>Data pengguna tidak ditemukan</h4>
+						<h4>Data kategori tidak ditemukan</h4>
         <?php endif ?>
       </div>
     </div>

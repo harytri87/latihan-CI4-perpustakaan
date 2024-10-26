@@ -25,7 +25,7 @@ function formatJudul($judul)
       // yg ada di list, tetep kecil
       $kata = strtolower($kata);
     }
-    else if (str_contains($kata, "Al-") or str_contains($kata, "al-")) {
+    else if (str_contains($kata, "Al-") or str_contains($kata, "al-") or str_contains($kata, "AL-")) {
       // Sedikit pengecualian, kayak Al-Qur'an, nama tokoh Islam atau nama tempat.
       // Kalo pake in_array kayak yg di atas, itu harus full serupa katanya, ga bisa "like"
       $pisahGaris = explode("-", $kata);

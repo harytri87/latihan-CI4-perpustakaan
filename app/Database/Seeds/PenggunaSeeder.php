@@ -10,6 +10,14 @@ class PenggunaSeeder extends Seeder
     {
         $data = [
             [
+                'pengguna_email'    => 'admin@example.net',
+                'pengguna_username' => 'admin',
+                'pengguna_password' => password_hash('admin12345', PASSWORD_DEFAULT),
+                'pengguna_nama'     => 'Si Admin',
+                'grup_id'           => '1',
+                'pengguna_status'   => 'Aktif',
+            ],
+            [
                 'pengguna_email'    => 'asepkarasep@example.net',
                 'pengguna_username' => 'asepkarasep',
                 'pengguna_password' => password_hash('asep12345', PASSWORD_DEFAULT),

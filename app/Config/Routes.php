@@ -43,7 +43,7 @@ $routes->group('pengguna', [], function($routes) {
 $routes->group('kategori', [], function($routes) {
     $routes->get('tambah', 'KategoriController::new', ['as' => 'kategoriTambahForm']);
     $routes->post('/', 'KategoriController::create', ['as' => 'kategoriTambahAction']);
-    $routes->get('/', 'PKategoriController::index', ['as' => 'kategoriIndex']);
+    $routes->get('/', 'KategoriController::index', ['as' => 'kategoriIndex']);
     $routes->get('(:segment)', 'KategoriController::show/$1', ['as' => 'kategoriRincian']);
     $routes->get('(:segment)/ubah', 'KategoriController::edit/$1', ['as' => 'kategoriUbahForm']);
     $routes->put('(:num)', 'KategoriController::update/$1', ['as' => 'kategoriUbahAction']);
@@ -54,7 +54,7 @@ $routes->group('kategori', [], function($routes) {
 $routes->group('buku', [], function($routes) {
     $routes->get('tambah', 'BukuController::new', ['as' => 'bukuTambahForm']);
     $routes->post('/', 'BukuController::create', ['as' => 'bukuTambahAction']);
-    $routes->get('/', 'PBukuController::index', ['as' => 'bukuIndex']);
+    $routes->get('/', 'BukuController::index', ['as' => 'bukuIndex']);
     $routes->get('(:segment)', 'BukuController::show/$1', ['as' => 'bukuRincian']);
     $routes->get('(:segment)/ubah', 'BukuController::edit/$1', ['as' => 'bukuUbahForm']);
     $routes->put('(:num)', 'BukuController::update/$1', ['as' => 'bukuUbahAction']);
@@ -64,7 +64,7 @@ $routes->group('buku', [], function($routes) {
 $routes->group('wishlist', [], function($routes) {
     $routes->get('tambah', 'WishlistController::new', ['as' => 'wishlistTambahForm']);
     $routes->post('/', 'WishlistController::create', ['as' => 'wishlistTambahAction']);
-    $routes->get('/', 'PWishlistController::index', ['as' => 'wishlistIndex']);
+    $routes->get('/', 'WishlistController::index', ['as' => 'wishlistIndex']);
     $routes->get('(:segment)', 'WishlistController::show/$1', ['as' => 'wishlistRincian']);
     $routes->get('(:segment)/ubah', 'WishlistController::edit/$1', ['as' => 'wishlistUbahForm']);
     $routes->put('(:num)', 'WishlistController::update/$1', ['as' => 'wishlistUbahAction']);
@@ -74,7 +74,7 @@ $routes->group('wishlist', [], function($routes) {
 $routes->group('peminjaman', [], function($routes) {
     $routes->get('tambah', 'PeminjamanController::new', ['as' => 'peminjamanTambahForm']);
     $routes->post('/', 'PeminjamanController::create', ['as' => 'peminjamanTambahAction']);
-    $routes->get('/', 'PPeminjamanController::index', ['as' => 'peminjamanIndex']);
+    $routes->get('/', 'PeminjamanController::index', ['as' => 'peminjamanIndex']);
     $routes->get('(:segment)', 'PeminjamanController::show/$1', ['as' => 'peminjamanRincian']);
     $routes->get('(:segment)/ubah', 'PeminjamanController::edit/$1', ['as' => 'peminjamanUbahForm']);
     $routes->put('(:num)', 'PeminjamanController::update/$1', ['as' => 'peminjamanUbahAction']);

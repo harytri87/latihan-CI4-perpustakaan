@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <div class="container d-flex justify-content-center p-5">
-  <div class="card col-12 col-lg-5 col-md-7">
+  <div class="card col-12">
     <div class="card-body">
       <h5 class="card-title mb-5">Tambah Pengguna Baru</h5>
 

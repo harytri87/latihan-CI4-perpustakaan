@@ -95,9 +95,9 @@ class PenggunaController extends BaseController
 				]
 			],
 		];
-        if (! $this->validateData([], $validationRule)) {
+		if (! $this->validateData([], $validationRule)) {
 			return redirect()->route('penggunaTambahForm')->with('errors', $this->validator->getErrors())->withInput();
-        }
+		}
 
 		// Cek upload foto
 		$foto = $this->request->getFile('pengguna_foto');

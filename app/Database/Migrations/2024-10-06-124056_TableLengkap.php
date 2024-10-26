@@ -40,14 +40,15 @@ class TableLengkap extends Migration
         
         // Table kategori
         $this->forge->addField([
-            'kategori_id'   => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
-            'kategori_kode' => ['type' => 'varchar', 'constraint' => 20],
-            'kategori_nama' => ['type' => 'varchar', 'constraint' => 255],
+            'kategori_id'      => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+            'kategori_nama'    => ['type' => 'varchar', 'constraint' => 100],
+            'kategori_rincian' => ['type' => 'varchar', 'constraint' => 255],
+            'kategori_link'    => ['type' => 'varchar', 'constraint' => 100],
             'created_at datetime default current_timestamp',
             'updated_at datetime default current_timestamp on update current_timestamp'
         ]);
         $this->forge->addPrimaryKey('kategori_id');
-        $this->forge->addUniqueKey('kategori_kode');
+        $this->forge->addUniqueKey('kategori_link');
         $this->forge->createTable('kategori');
         
         // Table buku
@@ -104,7 +105,6 @@ class TableLengkap extends Migration
         // Table wishlist
         $this->forge->addField([
             'wishlist_id'   => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
-            'wishlist_kode' => ['type' => 'varchar', 'constraint' => 20],
             'seri_id'       => ['type' => 'int', 'constraint' => 11, 'unsigned' => true],
             'pengguna_id'   => ['type' => 'int', 'constraint' => 11, 'unsigned' => true],
             'status'        => ['type' => 'varchar', 'constraint' => 255],
@@ -112,7 +112,6 @@ class TableLengkap extends Migration
             'updated_at datetime default current_timestamp on update current_timestamp'
         ]);
         $this->forge->addPrimaryKey('wishlist_id');
-        $this->forge->addUniqueKey('wishlist_kode');
         $this->forge->addForeignKey('seri_id', 'nomor_seri', 'seri_id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('pengguna_id', 'pengguna', 'pengguna_id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('wishlist');

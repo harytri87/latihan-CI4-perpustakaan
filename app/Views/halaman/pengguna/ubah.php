@@ -3,9 +3,19 @@
 <?= $this->section('content') ?>
 
 <div class="container d-flex justify-content-center p-5">
-  <div class="card col-12 col-lg-5 col-md-7">
+  <div class="card col-12">
     <div class="card-body">
-      <h5 class="card-title mb-5">Ubah Data <?= esc($pengguna['pengguna_nama']) ?></h5>
+      <div class="row">
+        <div class="col-11">
+          <h5 class="card-title mb-3">Ubah Data <?= esc($pengguna['pengguna_nama']) ?></h5>
+        </div>
+        <div class="col">
+          <div class="foto-profil mb-3">
+            <img class="foto-profil" src="<?= esc($pengguna['pengguna_foto']) !== null ? base_url('uploads/profil/') . esc($pengguna['pengguna_foto']) : base_url('images/profil/foto-profil-default.png') ?>">
+          </div>
+        </div>
+      </div>
+      
 
       <?= $this->include('layout/inc/alert.php') ?>
 
@@ -56,12 +66,13 @@
         <div class="form-floating mb-2">
           <input type="file" name="pengguna_foto" id="floatingFotoInput" class="form-control" placeholder="Foto Profil" onchange="
             document.getElementById('fotoImg').src = window.URL.createObjectURL(this.files[0])
+            document.getElementById('fotoDiv').style.display = 'block'
           ">
           <label for="floatingFotoInput">Foto Profil (opsional)</label>
         </div>
         
-        <div class="foto-preview" id="fotoDiv">
-          <img class="foto-profil" src="<?= esc($pengguna['pengguna_foto']) !== null ? base_url('uploads/profil/') . esc($pengguna['pengguna_foto']) : base_url('images/profil/foto-profil-default.png') ?>" id="fotoImg">
+        <div class="foto-preview" id="fotoDiv" style="display: none;">
+          <img class="foto-profil" src="" id="fotoImg">
         </div>
         
 

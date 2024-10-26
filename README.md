@@ -6,11 +6,14 @@
 
 ### Info login buat ngetes webnya
 1. Admin:
-   - admin@example.net
-   - admin123
-2. Anggota:
-   - dudungsurudung@example.net
-   - dudung123
+   - admin
+   - admin12345
+2. Pegawai:
+   - dudungsurudung
+   - dudung12345
+3. Anggota:
+   - dadangdaradang
+   - dadang12345
    
 *Info login yg lain ada di file seeder*
 
@@ -23,9 +26,13 @@
 2. Bikin database: latihan-perpustakaan
    - Manual atau *command*:
    - php spark db:create latihan-perpustakaan
-3. php spark migrate    *(bikin table di dalem database)*
-4. php spark db:seed    *(ngisi data di table)*
-5. php spark serve terus masukin link localhost yg muncul itu ke browser
-6. php spark            *(liat semua command)*
+3. php spark migrate<br>
+   &nbsp;*(bikin table di dalem database)*
+4. php spark db:seed SemuaSeeder<br>
+   &nbsp;*(ngisi data di table)*
+5. php spark serve<br>
+   &nbsp;Terus masukin link localhost yg muncul itu ke browser
+6. php spark<br>
+   &nbsp;*(liat semua command)*
 
 *semua php spark itu diketik di terminal / console yg udh masuk ke folder projek latihan ini*

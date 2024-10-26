@@ -7,7 +7,7 @@
     <div class="collapse navbar-collapse justify-content-end gap-1" id="navbarSupportedContent">
       <form class="d-flex col-lg-7 mx-auto" role="search">
           <input class="form-control me-2" type="search" name="cari" placeholder="Cari judul buku / penulis buku / ISBN" aria-label="Cari buku">
-          <button class="btn btn-outline-success" type="submit">Cari</button>
+          <button class="btn btn-outline-primary" type="submit">Cari</button>
       </form>
       <ul class="navbar-nav">
           <li class="nav-item">
