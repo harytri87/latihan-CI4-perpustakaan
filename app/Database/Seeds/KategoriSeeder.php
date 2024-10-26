@@ -55,6 +55,11 @@ class KategoriSeeder extends Seeder
                 'kategori_rincian' => 'Seni secara umum.'
             ],
             [
+                'kategori_nama'    => 'Fiksi',
+                'kategori_link'    => 'fiksi',
+                'kategori_rincian' => 'Fiksi secara umum.'
+            ],
+            [
                 'kategori_nama'    => 'Novel',
                 'kategori_link'    => 'novel',
                 'kategori_rincian' => 'Novel secara umum.'
