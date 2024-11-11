@@ -11,7 +11,7 @@
         </div>
         <div class="col">
           <div class="foto-profil mb-3">
-            <img class="foto-profil" src="<?= esc($pengguna['pengguna_foto']) !== null ? base_url('uploads/profil/') . esc($pengguna['pengguna_foto']) : base_url('images/profil/foto-profil-default.png') ?>">
+            <img class="foto-profil" src="<?= esc($pengguna['pengguna_foto']) !== null ? base_url('images/profil/') . esc($pengguna['pengguna_foto']) : base_url('images/profil/foto-profil-default.png') ?>">
           </div>
         </div>
       </div>

@@ -66,10 +66,14 @@ class GrupModel extends Model
     
 	public function getGrup($grup_id = false)
 	{
+        $this->select('grup.*, COUNT(pengguna.pengguna_id) AS jumlah_pengguna')
+             ->join('pengguna', 'grup.grup_id = pengguna.grup_id', 'left')
+             ->groupBy('grup.grup_id');
+
 		if ($grup_id === false) {
-			return $this->findAll();
+			return $this->paginate(10);
 		}
 
-		return $this->where(['grup_id' => $grup_id])->first();
+		return $this->where(['grup.grup_id' => $grup_id])->first();
 	}
 }

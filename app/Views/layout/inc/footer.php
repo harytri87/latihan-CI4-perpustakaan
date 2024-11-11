@@ -6,6 +6,6 @@
       </div>
     </div>
     
-    <a href="#" class="p-3 bottom-0 end-0 position-absolute"><i class="bi bi-arrow-up-circle h1"></i></a>
+    <a href="#" class="p-3 bottom-0 end-0 position-absolute"><i class="bi bi-arrow-up-circle-fill h1"></i></a>
   </div>
 </footer>

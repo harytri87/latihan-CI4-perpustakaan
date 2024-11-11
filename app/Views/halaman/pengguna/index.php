@@ -13,7 +13,7 @@
         <div class="col-9">
           <form action="" method="get" class="d-flex" role="search">
               <input class="form-control me-2" type="search" name="cari" placeholder="Cari nama / email pengguna" aria-label="Cari pengguna">
-              <button class="btn btn-outline-success" type="submit">Cari</button>
+              <button class="btn btn-primary" type="submit">Cari</button>
           </form>
         </div>
         <div class="col">

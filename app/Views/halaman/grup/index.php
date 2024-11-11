@@ -18,7 +18,7 @@
       <div class="row table-responsive">
             
         <?php if ($grup_list !== []): 
-          $no = 1 + (5 * ($pager->getCurrentPage() - 1));
+          $no = 1 + ($penomoran * ($pager->getCurrentPage() - 1));
         ?>
           <table class="table table-bordered table-striped table-hover">
             <thead class="table-primary">
@@ -26,6 +26,7 @@
                 <th class="text-center">#</th>
                 <th>Nama Grup</th>
                 <th>Keterangan</th>
+                <th class="text-center">Jumlah</th>
                 <th class="text-center">Aksi</th>
               </tr>
             </thead>
@@ -36,6 +37,7 @@
                   <td class="text-center"><?= $no++ ?></td>
                   <td><?= esc($grup_item['grup_nama']) ?></td>
                   <td><?= esc($grup_item['grup_keterangan']) ?></td>
+                  <td class="text-center"><?= esc($grup_item['jumlah_pengguna']) ?> orang</td>
                   <td class="text-center" style="width: 21%;">
                     <abbr title="ubah data">
                       <a href="<?= route_to('grupUbahForm', esc($grup_item['grup_id'])) ?>" class="btn btn-warning btn-sm"><i class="bi bi-pencil-fill"></i></a>
@@ -56,7 +58,7 @@
           </table>
 
           <div class="col">
-						<i class="fs-6 fw-lighter">Menampilkan <?=empty($grup_list) ? 0 : 1 + (5 * ($pager->getCurrentPage() - 1))?> - <?=$no-1?> dari <?=$pager->getTotal()?> data</i>
+						<i class="fs-6 fw-lighter">Menampilkan <?=empty($grup_list) ? 0 : 1 + ($penomoran * ($pager->getCurrentPage() - 1))?> - <?=$no-1?> dari <?=$pager->getTotal()?> data</i>
           </div>
 
           <div class="col">

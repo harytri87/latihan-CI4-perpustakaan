@@ -119,6 +119,7 @@ class KategoriController extends BaseController
     $aturanValidasi = $kategoriModel->validationRules;
 
     // Ngubah aturan validasi is_unique biar aman buat kategori_id ini aja
+    $aturanValidasi['kategori_kode'] = "required|min_length[3]|max_length[20]|is_unique[kategori.kategori_kode,kategori_id,{$kategori_id}]";
     $aturanValidasi['kategori_link'] = "required|min_length[4]|max_length[100]|is_unique[kategori.kategori_link,kategori_id,{$kategori_id}]";
 
     // Cek ketersediaan data

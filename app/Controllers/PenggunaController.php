@@ -101,10 +101,9 @@ class PenggunaController extends BaseController
 
 		// Cek upload foto
 		$foto = $this->request->getFile('pengguna_foto');
-		// dd($foto);
 		if ($foto != "") {
 			// Mindahin foto
-			$foto->move(ROOTPATH . 'public/uploads/profil/', $foto->getRandomName());
+			$foto->move(ROOTPATH . 'public/images/profil/', $foto->getRandomName());
 			if ($foto->hasMoved()) {
 				// Berhasil mindahin foto, ambil namanya buat isi database
 				$dataPost['pengguna_foto'] = $foto->getName();
@@ -121,7 +120,7 @@ class PenggunaController extends BaseController
 		if ($penggunaModel->save($dataPost) === false) {
 			// Data gagal masuk ke database tapi foto udah masuk ke folder duluan
 			if ($foto != "") {
-				$fotoBaru = ROOTPATH . 'public/uploads/profil/' . $dataPost['pengguna_foto'];
+				$fotoBaru = ROOTPATH . 'public/images/profil/' . $dataPost['pengguna_foto'];
 				unlink($fotoBaru);
 			}
 
@@ -209,10 +208,9 @@ class PenggunaController extends BaseController
 
 		// Cek upload foto
 		$foto = $this->request->getFile('pengguna_foto');
-		// dd($foto);
 		if ($foto != "") {
 			// Mindahin foto
-			$foto->move(ROOTPATH . 'public/uploads/profil/', $foto->getRandomName());
+			$foto->move(ROOTPATH . 'public/images/profil/', $foto->getRandomName());
 			if ($foto->hasMoved()) {
 				// Berhasil mindahin foto, ambil namanya buat isi database
 				$data['pengguna_foto'] = $foto->getName();
@@ -227,7 +225,7 @@ class PenggunaController extends BaseController
 		if ($penggunaModel->update($pengguna_id, $data) === false) {
 			// Data gagal masuk ke database tapi foto udah masuk ke folder duluan
 			if ($foto != "") {
-				$fotoBaru = ROOTPATH . 'public/uploads/profil/' . $data['pengguna_foto'];
+				$fotoBaru = ROOTPATH . 'public/images/profil/' . $data['pengguna_foto'];
 				unlink($fotoBaru);
 			}
 
@@ -237,7 +235,7 @@ class PenggunaController extends BaseController
 		// Baru dijalanin kalo ngupdate data berhasil
 		if ($foto != "") {
 			// Ngehapus foto lama, kalo ada
-			$fotoLama = ROOTPATH . 'public/uploads/profil/' . $pengguna['pengguna_foto'];
+			$fotoLama = ROOTPATH . 'public/images/profil/' . $pengguna['pengguna_foto'];
 			if (file_exists($fotoLama)) {
 				unlink($fotoLama);
 				// Katanya ada juga helper dari CI buat ngehapus. Tapi biar ga ngeload helper, pake bawaan PHPnya aja
@@ -260,7 +258,7 @@ class PenggunaController extends BaseController
 			return redirect()->route('penggunaIndex')->with('error', 'Data pengguna tidak tersedia.');
 		}
 
-		$fotoLama = ROOTPATH . 'public/uploads/profil/' . $pengguna['pengguna_foto'];
+		$fotoLama = ROOTPATH . 'public/images/profil/' . $pengguna['pengguna_foto'];
 
 		if ($penggunaModel->delete($pengguna_id) === false) {
 			return redirect()->back()->with('errors', $penggunaModel->errors())->withInput();

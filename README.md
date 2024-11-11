@@ -36,3 +36,5 @@
    &nbsp;*(liat semua command)*
 
 *semua php spark itu diketik di terminal / console yg udh masuk ke folder projek latihan ini*
+
+*Penjelasan tambahan soal kategori ada di file KategoriSeeder.php*

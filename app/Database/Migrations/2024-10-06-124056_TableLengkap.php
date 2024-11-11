@@ -41,6 +41,7 @@ class TableLengkap extends Migration
         // Table kategori
         $this->forge->addField([
             'kategori_id'      => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+            'kategori_kode'    => ['type' => 'varchar', 'constraint' => 20],
             'kategori_nama'    => ['type' => 'varchar', 'constraint' => 100],
             'kategori_rincian' => ['type' => 'varchar', 'constraint' => 255],
             'kategori_link'    => ['type' => 'varchar', 'constraint' => 100],
@@ -48,7 +49,7 @@ class TableLengkap extends Migration
             'updated_at datetime default current_timestamp on update current_timestamp'
         ]);
         $this->forge->addPrimaryKey('kategori_id');
-        $this->forge->addUniqueKey('kategori_link');
+        $this->forge->addUniqueKey(['kategori_kode', 'kategori_link']);
         $this->forge->createTable('kategori');
         
         // Table buku
@@ -60,6 +61,7 @@ class TableLengkap extends Migration
             'buku_terbit'   => ['type' => 'int', 'constraint' => 11, 'unsigned' => true],
             'buku_sinopsis' => ['type' => 'text'],
             'kategori_id'   => ['type' => 'int', 'constraint' => 11, 'unsigned' => true],
+            'buku_foto'     => ['type' => 'varchar', 'constraint' => 255],
             'slug'          => ['type' => 'varchar', 'constraint' => 255],
             'created_at datetime default current_timestamp',
             'updated_at datetime default current_timestamp on update current_timestamp'

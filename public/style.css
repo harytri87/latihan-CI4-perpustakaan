@@ -18,3 +18,26 @@ img.foto-profil {
   object-fit: cover;
   border-radius: 50%;
 }
+
+
+div.sampul-preview {
+  margin: auto;
+  height: 284px;
+  width: 160px;
+}
+
+div.sampul-rinci {
+  margin: auto;
+  height: 1280px;
+  width: 720px;
+}
+
+img.sampul {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+th {
+  vertical-align: middle;
+}

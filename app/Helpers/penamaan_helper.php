@@ -48,3 +48,24 @@ function formatJudul($judul)
   $hasil = ucfirst(join(" ", $satuinKata));
   return $hasil;
 }
+
+function tigaHurufPenulis($penulis)
+{
+  // Ngambil 3 huruf pertama dari nama penulis
+
+  $penulisBuku = str_replace(' ', '', $penulis);
+  $resultPenulis = strtoupper(substr($penulisBuku, 0, 3));
+
+  return $resultPenulis;
+}
+
+function inisialJudul($judul)
+{
+  // Ngambil inisial judul buku
+  
+  $expr = '/(?<=\s|^)\w/iu';
+  preg_match_all($expr, $judul, $matches);
+  $resultJudul = strtolower(implode('', $matches[0]));
+
+  return $resultJudul;
+}

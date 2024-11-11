@@ -16,12 +16,14 @@
           <table class="table table-bordered table-striped table-hover">
             <thead class="table-primary">
               <tr>
+                <th>kode</th>
                 <th>Nama</th>
                 <th>Rincian</th>
               </tr>
             </thead>
             <tbody>
               <tr>
+                <td><?= esc($kategori['kategori_kode']) ?></td>
                 <td><?= esc($kategori['kategori_nama']) ?></td>
                 <td><?= esc($kategori['kategori_rincian']) ?></td>
               </tr>

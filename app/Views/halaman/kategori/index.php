@@ -13,7 +13,7 @@
         <div class="col-9">
           <form action="" method="get" class="d-flex" role="search">
               <input class="form-control me-2" type="search" name="cari" placeholder="Cari kategori" aria-label="Cari kategori">
-              <button class="btn btn-outline-primary" type="submit">Cari</button>
+              <button class="btn btn-primary" type="submit">Cari</button>
           </form>
         </div>
         <div class="col">
@@ -30,6 +30,7 @@
             <thead class="table-primary">
               <tr>
                 <th class="text-center">#</th>
+                <th>Kode</th>
                 <th>Nama</th>
                 <th>Rincian</th>
                 <th class="text-center">Aksi</th>
@@ -40,6 +41,7 @@
 
                 <tr>
                   <td class="text-center"><?= $no++ ?></td>
+                  <td><?= esc($kategori_item['kategori_kode']) ?></td>
                   <td><?= esc($kategori_item['kategori_nama']) ?></td>
                   <td><?= esc($kategori_item['kategori_rincian']) ?></td>
                   <td class="text-center" style="width: 21%;">

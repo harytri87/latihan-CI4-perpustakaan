@@ -26,7 +26,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
             <div class="modal-body">
-              Apakah yakin ingin menghapus?
+              Apakah yakin ingin menghapus? Termasuk semua data terkaitnya
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>

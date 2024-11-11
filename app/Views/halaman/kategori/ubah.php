@@ -11,6 +11,12 @@
 
       <?= form_open(route_to('kategoriUbahAction', esc($kategori['kategori_id']))) ?>
         <input type="hidden" name="_method" value="PUT"/>
+        <!-- Kode -->
+        <div class="form-floating mb-2">
+          <input type="number" name="kategori_kode" id="floatingKodeInput" class="form-control" placeholder="Kode Kategori" required minlength="3" maxlength="20" value="<?= old('kategori_kode') !== null ? old('kategori_kode') : esc($kategori['kategori_kode']) ?>">
+          <label for="floatingKodeInput">Kode Kategori</label>
+        </div>
+
         <!-- Nama -->
         <div class="form-floating mb-2">
           <input type="text" name="kategori_nama" id="floatingNamaInput" class="form-control" placeholder="Nama" required maxlength="100" value="<?= old('kategori_nama') !== null ? old('kategori_nama') : esc($kategori['kategori_nama']) ?>">

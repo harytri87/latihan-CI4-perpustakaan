@@ -13,8 +13,9 @@ class GrupController extends BaseController
     {
         $grupModel = new GrupModel();
         $data = [
-            'grup_list' => $grupModel->paginate(5),
+            'grup_list' => $grupModel->getGrup(),
             'pager'     => $grupModel->pager,
+            'penomoran' => 10,	// samain sama paginate() di model
             'title'     => 'Data Grup | Perpustakaan',
         ];
 
