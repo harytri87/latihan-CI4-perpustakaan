@@ -87,25 +87,7 @@ class BukuController extends BaseController
     $aturanValidasi['buku_terbit'] = "required|exact_length[4]|numeric|greater_than[1900]|less_than[$tahunValidasi]";
 
     // Validasi file
-		$validationRule = [
-			'buku_foto' => [
-        // 'label' => 'Foto Profil',	// ini kalo ga pake data 'errors' bakal kepake
-        'rules' => [
-          'uploaded[buku_foto]',
-          'is_image[buku_foto]',
-          'mime_in[buku_foto,image/jpg,image/jpeg,image/png,image/webp]',
-          'max_size[buku_foto,5000]',
-          'max_dims[buku_foto,2700,4880]',
-                ],
-				'errors' => [
-          'uploaded' => 'Harap pilih foto sampul',
-					'is_image' => 'Foto sampul hanya boleh berupa gambar',
-          'mime_in'  => 'File gambar tidak didukung',
-          'max_size' => 'File gambar maksimal 5 MB',
-          'max_dims' => 'Resolusi gambar maksimal 2700x4880 pixel'
-				]
-			],
-		];
+		$validationRule = validasiSampul($adaFoto = true);
 		if (! $this->validateData([], $validationRule)) {
 			return redirect()->route('adminBukuTambahForm')->with('errors', $this->validator->getErrors())->withInput();
 		}
@@ -113,18 +95,9 @@ class BukuController extends BaseController
     // Cek upload foto
 		$foto = $this->request->getFile('buku_foto');
 		if ($foto != "") {
-			// Mindahin foto
-			$foto->move(ROOTPATH . 'public/images/buku/', $foto->getRandomName());
-			if ($foto->hasMoved()) {
-				// Berhasil mindahin foto, ambil namanya buat isi database
-				$dataPost['buku_foto'] = $foto->getName();
-			} else {
-				// Gagal
-				return redirect()->route('adminBukuTambahForm')->with('error', 'Gagal upload foto sampul')->withInput();
-			}
+      $dataPost['buku_foto'] = cekUploadSampul($foto);
+      $fotoBaru = ROOTPATH . 'public/images/buku/' . $dataPost['buku_foto'];
 		}
-    
-    $fotoBaru = ROOTPATH . 'public/images/buku/' . $dataPost['buku_foto'];
 
     // Validasi input lainnya
     if (! $this->validateData($dataPost, $aturanValidasi, $bukuModel->validationMessages)) {
@@ -211,22 +184,7 @@ class BukuController extends BaseController
     }
 
     // Validasi file
-		$validationRule = [
-			'buku_foto' => [
-        'rules' => [
-          'is_image[buku_foto]',
-          'mime_in[buku_foto,image/jpg,image/jpeg,image/png,image/webp]',
-          'max_size[buku_foto,5000]',
-          'max_dims[buku_foto,2700,4880]',
-                ],
-				'errors' => [
-					'is_image' => 'Foto sampul hanya boleh berupa gambar',
-          'mime_in'  => 'File gambar tidak didukung',
-          'max_size' => 'File gambar maksimal 5 MB',
-          'max_dims' => 'Resolusi gambar maksimal 2700x4880 pixel'
-				]
-			],
-		];
+		$validationRule = validasiSampul();
 		if (! $this->validateData([], $validationRule)) {
 			return redirect()->back()->with('errors', $this->validator->getErrors())->withInput();
 		}
@@ -234,16 +192,8 @@ class BukuController extends BaseController
     // Cek upload foto
 		$foto = $this->request->getFile('buku_foto');
 		if ($foto != "") {
-			// Mindahin foto
-			$foto->move(ROOTPATH . 'public/images/buku/', $foto->getRandomName());
-			if ($foto->hasMoved()) {
-				// Berhasil mindahin foto, ambil namanya buat isi database
-				$dataPost['buku_foto'] = $foto->getName();
-        $fotoBaru = ROOTPATH . 'public/images/buku/' . $dataPost['buku_foto'];
-			} else {
-				// Gagal
-				return redirect()->route('adminBukuUbahForm')->with('error', 'Gagal upload foto sampul')->withInput();
-			}
+      $dataPost['buku_foto'] = cekUploadSampul($foto);
+      $fotoBaru = ROOTPATH . 'public/images/buku/' . $dataPost['buku_foto'];
 		} else {
       // Ngilangin validasi buku_foto kalo ga ngubah foto
       unset($aturanValidasi['buku_foto']);

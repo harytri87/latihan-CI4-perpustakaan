@@ -13,31 +13,31 @@
         <input type="hidden" name="_method" value="PUT"/>
         <!-- ISBN -->
         <div class="form-floating mb-2">
-          <input type="number" name="isbn" id="floatingISBNInput" class="form-control" placeholder="ISBN" minlength="13" maxlength="13" value="<?= $isbn = old('isbn') ?? esc($buku['isbn']) ?>">
+          <input type="number" name="isbn" id="floatingISBNInput" class="form-control" placeholder="ISBN" minlength="13" maxlength="13" required value="<?= $isbn = old('isbn') ?? esc($buku['isbn']) ?>">
           <label for="floatingISBNInput">ISBN</label>
         </div>
 
         <!-- Judul -->
         <div class="form-floating mb-2">
-          <input type="text" name="buku_judul" id="floatingJudulInput" class="form-control" placeholder="Judul" maxlength="100" value="<?= $buku_judul = old('buku_judul') ?? esc($buku['buku_judul']) ?>">
+          <input type="text" name="buku_judul" id="floatingJudulInput" class="form-control" placeholder="Judul" maxlength="100" required value="<?= $buku_judul = old('buku_judul') ?? esc($buku['buku_judul']) ?>">
           <label for="floatingJudulInput">Judul</label>
         </div>
 
         <!-- Penulis -->
         <div class="form-floating mb-2">
-          <input type="text" name="buku_penulis" id="floatingPenulisInput" class="form-control" placeholder="Penulis" maxlength="100" value="<?= $buku_penulis = old('buku_penulis') ?? esc($buku['buku_penulis']) ?>">
+          <input type="text" name="buku_penulis" id="floatingPenulisInput" class="form-control" placeholder="Penulis" maxlength="100" required value="<?= $buku_penulis = old('buku_penulis') ?? esc($buku['buku_penulis']) ?>">
           <label for="floatingPenulisInput">Penulis</label>
         </div>
 
         <!-- Tahun Terbit -->
         <div class="form-floating mb-2">
-          <input type="number" name="buku_terbit" id="floatingTahunTerbitInput" class="form-control" placeholder="Tahun Terbit" minlength="4" maxlength="4" value="<?= $buku_terbit = old('buku_terbit') ?? esc($buku['buku_terbit']) ?>">
+          <input type="number" name="buku_terbit" id="floatingTahunTerbitInput" class="form-control" placeholder="Tahun Terbit" minlength="4" maxlength="4" value="<?= $buku_terbit = old('buku_terbit') ?? esc($buku['buku_terbit']) ?>" required>
           <label for="floatingTahunTerbitInput">Tahun Terbit</label>
         </div>
 
         <!-- Sinopsis -->
         <div class="form-floating mb-2">
-          <textarea name="buku_sinopsis" id="floatingSinopsisInput" class="form-control" placeholder="Sinopsis" rows="4" style="height:100%;"><?= $buku_sinopsis = old('buku_sinopsis') ?? esc($buku['buku_sinopsis']) ?></textarea>
+          <textarea name="buku_sinopsis" id="floatingSinopsisInput" class="form-control" placeholder="Sinopsis" rows="4" required style="height:100%;"><?= $buku_sinopsis = old('buku_sinopsis') ?? esc($buku['buku_sinopsis']) ?></textarea>
           <label for="floatingSinopsisInput">Sinopsis</label>
         </div>
 
@@ -55,7 +55,7 @@
 
         <!-- Gambar Sampul -->
         <div class="form-floating mb-2">
-          <input type="file" name="buku_foto" id="floatingFotoInput" class="form-control" placeholder="Foto Sampul" onchange="
+          <input type="file" name="buku_foto" id="floatingFotoInput" class="form-control" placeholder="Foto Sampul" accept="image/*" onchange="
             document.getElementById('fotoImg').src = window.URL.createObjectURL(this.files[0])
           ">
           <label for="floatingFotoInput">Foto Sampul</label>

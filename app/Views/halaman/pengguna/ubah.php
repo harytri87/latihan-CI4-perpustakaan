@@ -64,7 +64,7 @@
         
         <!-- Foto Profil -->
         <div class="form-floating mb-2">
-          <input type="file" name="pengguna_foto" id="floatingFotoInput" class="form-control" placeholder="Foto Profil" onchange="
+          <input type="file" name="pengguna_foto" id="floatingFotoInput" class="form-control" placeholder="Foto Profil" accept="image/*" onchange="
             document.getElementById('fotoImg').src = window.URL.createObjectURL(this.files[0])
             document.getElementById('fotoDiv').style.display = 'block'
           ">

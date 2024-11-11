@@ -78,40 +78,14 @@ class PenggunaController extends BaseController
 		}
 
 		// Validasi file
-		$validationRule = [
-			'pengguna_foto' => [
-					// 'label' => 'Foto Profil',	// ini kalo ga pake data 'errors' bakal kepake
-					'rules' => [
-							'is_image[pengguna_foto]',
-							'mime_in[pengguna_foto,image/jpg,image/jpeg,image/png,image/webp]',
-							'max_size[pengguna_foto,400]',
-							'max_dims[pengguna_foto,1080,1080]',
-                ],
-				'errors' => [
-					'is_image'    => 'Harap pilih gambar foto profil',
-				    'mime_in'     => 'File gambar tidak didukung',
-				    'max_size'    => 'File gambar maksimal 400 KB',
-				    'max_dims'    => 'Resolusi gambar maksimal 1080x1080 pixel'
-				]
-			],
-		];
+		$validationRule = validasiProfil();
 		if (! $this->validateData([], $validationRule)) {
 			return redirect()->route('penggunaTambahForm')->with('errors', $this->validator->getErrors())->withInput();
 		}
 
 		// Cek upload foto
 		$foto = $this->request->getFile('pengguna_foto');
-		if ($foto != "") {
-			// Mindahin foto
-			$foto->move(ROOTPATH . 'public/images/profil/', $foto->getRandomName());
-			if ($foto->hasMoved()) {
-				// Berhasil mindahin foto, ambil namanya buat isi database
-				$dataPost['pengguna_foto'] = $foto->getName();
-			} else {
-				// Gagal
-				return redirect()->route('penggunaTambahForm')->with('error', 'Gagal upload foto profil')->withInput();
-			}
-		}
+		$dataPost['pengguna_foto'] = cekUploadFoto($foto);
 
 		// Format huruf besar/kecil nama
 		$dataPost['pengguna_nama'] = formatJudul($dataPost['pengguna_nama']);
@@ -185,42 +159,15 @@ class PenggunaController extends BaseController
 		}
 
 		// Validasi file
-		$validationRule = [
-			'pengguna_foto' => [
-					// 'label' => 'Foto Profil',	// ini kalo ga pake data 'errors' bakal kepake
-					'rules' => [
-							'is_image[pengguna_foto]',
-							'mime_in[pengguna_foto,image/jpg,image/jpeg,image/png,image/webp]',
-							'max_size[pengguna_foto,400]',
-							'max_dims[pengguna_foto,1080,1080]',
-					],
-				'errors' => [
-					'is_image'    => 'Harap pilih gambar foto profil',
-				    'mime_in'     => 'File gambar tidak didukung',
-				    'max_size'    => 'File gambar maksimal 400 KB',
-				    'max_dims'    => 'Resolusi gambar maksimal 1080x1080 pixel'
-				]
-			],
-		];
+		$validationRule = validasiProfil();
     if (! $this->validateData([], $validationRule)) {
 			return redirect()->back()->with('errors', $this->validator->getErrors())->withInput();
     }
 
 		// Cek upload foto
 		$foto = $this->request->getFile('pengguna_foto');
-		if ($foto != "") {
-			// Mindahin foto
-			$foto->move(ROOTPATH . 'public/images/profil/', $foto->getRandomName());
-			if ($foto->hasMoved()) {
-				// Berhasil mindahin foto, ambil namanya buat isi database
-				$data['pengguna_foto'] = $foto->getName();
-			} else {
-				// Gagal
-				return redirect()->back()->with('error', 'Gagal upload foto profil')->withInput();
-			}
-		}
+		$data['pengguna_foto'] = cekUploadFoto($foto);
 
-		// dd($data);
 		// Isi database pake validasi yang di model
 		if ($penggunaModel->update($pengguna_id, $data) === false) {
 			// Data gagal masuk ke database tapi foto udah masuk ke folder duluan
