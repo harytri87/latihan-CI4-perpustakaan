@@ -40,15 +40,26 @@ class BukuController extends BaseController
     // Menampilkan rincian satu buku
 
     $bukuModel = new BukuModel();
+    $nomorSeriModel = new NomorSeriModel();
+		$buku = $bukuModel->satuBuku($slug);
+		$cariStatus = $this->request->getVar('status');
+
 		$data = [
-			'buku'  => $bukuModel->satuBuku($slug),
-			'title' => 'Rincian Buku | Perpustakaan'
+			'buku'            => $buku,
+			'title'           => 'Rincian Buku | Perpustakaan',
+			'penomoran'       => 20,	// samain sama paginate() di model getNomorSeri()
+			'cari_status'     => $cariStatus,
+			'aksi'						=> 'bukuController',	// Tanda manggil tampilan tablenya dari controller ini
 		];
 
     // Jika data tidak ditemukan
 		if ($data['buku'] === null) {
 			throw new PageNotFoundException('Tidak dapat menemukan data buku: ' . $slug);
 		}
+
+    $data['jumlah_tersedia'] = $nomorSeriModel->countTersedia($buku['isbn']);
+    $data['nomor_seri_list'] = $nomorSeriModel->getNomorSeri($buku['isbn'], $cariStatus);
+    $data['pager'] = $nomorSeriModel->pager;
 
 		return view('halaman/buku/rincian', $data);
   }

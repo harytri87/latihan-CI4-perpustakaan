@@ -78,13 +78,13 @@ $routes->group('data', [], function($routes) {
     $routes->delete('buku/(:num)', 'BukuController::delete/$1', ['as' => 'adminBukuHapus']);
     
     // sebelah tombol cari ada dropdown buat statusnya
-    $routes->get('nomor-seri/tambah', 'NomorSeriController::new', ['as' => 'nomorSeriTambahForm']);
-    $routes->post('nomor-seri', 'NomorSeriController::create', ['as' => 'nomorSeriTambahAction']);
-    $routes->get('nomor-seri', 'NomorSeriController::index', ['as' => 'nomorSeriIndex']);
-    $routes->get('nomor-seri/(:segment)', 'NomorSeriController::show/$1', ['as' => 'nomorSeriRincian']);
-    $routes->get('nomor-seri/(:segment)/ubah', 'NomorSeriController::edit/$1', ['as' => 'nomorSeriUbahForm']);
-    $routes->put('nomor-seri/(:num)', 'NomorSeriController::update/$1', ['as' => 'nomorSeriUbahAction']);
-    $routes->delete('nomor-seri/(:num)', 'NomorSeriController::delete/$1', ['as' => 'nomorSeriHapus']);
+    $routes->get('label/tambah', 'NomorSeriController::new', ['as' => 'nomorSeriTambahForm']);
+    $routes->post('label', 'NomorSeriController::create', ['as' => 'nomorSeriTambahAction']);
+    $routes->get('label', 'NomorSeriController::index', ['as' => 'nomorSeriIndex']);
+    $routes->get('label/(:segment)', 'NomorSeriController::show/$1', ['as' => 'nomorSeriRincian']);
+    $routes->get('label/(:segment)/ubah', 'NomorSeriController::edit/$1', ['as' => 'nomorSeriUbahForm']);
+    $routes->put('label/(:num)', 'NomorSeriController::update/$1', ['as' => 'nomorSeriUbahAction']);
+    $routes->delete('label/(:num)', 'NomorSeriController::delete/$1', ['as' => 'nomorSeriHapus']);
 });
 
 

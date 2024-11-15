@@ -25,15 +25,14 @@
             <h1 class="modal-title fs-5" id="hapusDataLabel">Hapus Grup</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-            <div class="modal-body">
-              Apakah yakin ingin menghapus? Termasuk semua data terkaitnya
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
-              <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-            </div>
-          </form>
-        </div>
+          <div class="modal-body">
+            Apakah yakin ingin menghapus? Termasuk semua data terkaitnya
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+          </div>
+        </form>
       </div>
     </div>
   </section>
@@ -44,26 +43,52 @@
 
   <!-- JS buat ngehapus data pake Bootstrap modal -->
   <script type="text/javascript">
-    const hapusData = document.getElementById('hapusData')
-    if (hapusData) {
-      hapusData.addEventListener('show.bs.modal', event => {
-        // Button that triggered the modal
-        const button = event.relatedTarget
-        // Extract info from data-bs-* attributes
-        const nama = button.getAttribute('data-bs-nama')
-        const urlHapus = button.getAttribute('data-bs-url')
-        // If necessary, you could initiate an Ajax request here
-        // and then do the updating in a callback.
-        // ga pake Ajax sih, langsung lewat form di modalnya
+    // Mendengarkan event 'show.bs.modal' untuk masing-masing modal
+    document.querySelectorAll('[data-bs-toggle="modal"]').forEach(button => {
+      button.addEventListener('click', function (event) {
+        // Mengambil data dari tombol yang diklik
+        const title = button.getAttribute('data-title');
+        const nama = button.getAttribute('data-bs-nama');
+        const judulBuku = button.getAttribute('data-bs-judulBuku');
+        const statusBuku = button.getAttribute('data-bs-statusBuku');
+        const isbnBuku = button.getAttribute('data-bs-isbnBuku');
+        const urlAksi = button.getAttribute('data-bs-url');
+        const targetModalId = button.getAttribute('data-bs-target').substring(1); // ID modal yang sesuai
 
-        // Update the modal's content.
-        const modalTitle = hapusData.querySelector('.modal-title')
-        const modalContentForm = hapusData.querySelector('.modal-dialog form')
+        // Menentukan modal berdasarkan ID target
+        const modal = document.getElementById(targetModalId);
+        const modalTitle = modal.querySelector('.modal-title');
+        const textJudul = modal.querySelector('#floatingJudulInput');
+        const formAksi = modal.querySelector('form');
 
-        modalTitle.textContent = `Hapus Data ${nama}`
-        document.getElementById('formHapus').action = urlHapus
-      })
-    }
+        // Mengubah konten utama modal
+
+        // Mengubah konten input sesuai dengan data dari masing-masing tombol
+        if (targetModalId === 'modalTambah') {
+          // Jika modal tambah, set isbn
+
+          const textISBN = modal.querySelector('#floatingISBNInput');
+          textISBN.value = isbnBuku;
+          modalTitle.textContent = title;
+          textJudul.value = judulBuku;
+          formAksi.action = urlAksi;
+
+        } else if (targetModalId === 'modalUbah') {
+          // Jika modal ubah, set status default sesuai yg di database
+
+          const textStatus = modal.querySelector('#floatingSelect');
+          textStatus.value = statusBuku;
+          modalTitle.textContent = title;
+          textJudul.value = judulBuku;
+          formAksi.action = urlAksi;
+
+        } else if (targetModalId === 'hapusData') {
+          // Jika modal hapus, set judul doang, id udh dari url di atas
+          modalTitle.textContent = `Hapus Data: ${nama}`;
+          formAksi.action = urlAksi;
+        }
+      });
+    });
   </script>
 </body>
 </html>

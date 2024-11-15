@@ -45,7 +45,7 @@ class NomorSeriModel extends Model
         ],
         'status_buku' => [
             'required'   => 'Kolom status buku harus diisi.', 
-            'min_length' => 'Kolom status buku minimal karakter.'
+            'min_length' => 'Kolom status buku minimal 5 karakter.'
         ]
     ];
     protected $skipValidation       = false;
@@ -65,7 +65,7 @@ class NomorSeriModel extends Model
     
 	public function getNomorSeri($cari = "", $status = "")
 	{
-        $this->select('nomor_seri.*, buku.*')
+        $this->select('nomor_seri.*, buku.buku_judul, buku.slug')
              ->join('buku', 'nomor_seri.isbn = buku.isbn', 'left');
 
         if ($status != "") {
@@ -78,18 +78,18 @@ class NomorSeriModel extends Model
             $this->groupStart()
                     ->like('nomor_seri.seri_kode', $cari, 'both')
                     ->orLike('nomor_seri.isbn', $cari, 'both')
-                    ->orLike('buku_judul', $cari, 'both')
+                    ->orLike('buku.buku_judul', $cari, 'both')
                  ->groupEnd();
         }
 
         return $this->groupBy('nomor_seri.seri_id')
-                    ->orderBy('nomor_seri.seri_kode', "ASC")
+                    ->orderBy('buku.buku_judul', "ASC")
                     ->paginate(20);
 	}
 
     public function satuNomorSeri($kode)
     {
-        return $this->select('nomor_seri.*, buku.*')
+        return $this->select('nomor_seri.*, buku.buku_judul, buku.slug')
                     ->join('buku', 'nomor_seri.isbn = buku.isbn', 'left')
                     ->where(['nomor_seri.seri_kode' => $kode])
                     ->groupBy('nomor_seri.seri_id')
@@ -99,5 +99,19 @@ class NomorSeriModel extends Model
     public function getISBN($isbn)
     {
         return $this->where(['isbn' => $isbn])->findAll();
+    }
+
+    public function countTersedia($isbn)
+    {
+        return $this->where('status_buku', 'tersedia')
+                    ->where('isbn', $isbn)
+                    ->countAllResults();
+    }
+
+    public function getMaxKode($isbn)
+    {
+        return $this->selectMax('seri_kode')
+                    ->where('isbn', $isbn)
+                    ->first();
     }
 }
