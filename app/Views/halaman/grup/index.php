@@ -2,10 +2,11 @@
 
 <?= $this->section('content') ?>
 
-  <?= $this->include('layout/inc/alert.php') ?>
-
   <div class="card container my-4">
     <div class="card-body">
+
+      <?= $this->include('layout/inc/alert.php') ?>
+      
       <div class="row mb-3">
         <div class="col">
           <h4>Grup</h4>

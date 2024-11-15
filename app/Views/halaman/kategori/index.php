@@ -1,11 +1,12 @@
 <?= $this->extend('layout/layout_utama') ?>
 
-<?= $this->section('content') ?>
-
-  <?= $this->include('layout/inc/alert.php') ?>
+<?= $this->section('content') ?>c
 
   <div class="card container my-4">
     <div class="card-body">
+
+      <?= $this->include('layout/inc/alert.php') ?>
+      
       <div class="row mb-3 justify-content-between">
         <div class="col-12 mb-3">
           <h4>Kategori</h4>
