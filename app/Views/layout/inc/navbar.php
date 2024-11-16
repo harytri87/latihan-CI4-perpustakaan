@@ -5,8 +5,15 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse justify-content-end gap-1" id="navbarSupportedContent">
-      <form class="d-flex col-lg-7 mx-auto" role="search">
-          <input class="form-control me-2" type="search" name="cari" placeholder="Cari judul buku / penulis buku / ISBN" aria-label="Cari buku">
+      <?php
+        if (isset($cari_keyword)) {
+          $cari_keyword = esc($cari_keyword);
+        } else {
+          $cari_keyword = null;
+        }
+      ?>
+      <form action="<?= route_to('index') ?>" method="get" class="d-flex col-lg-7 mx-auto" role="search">
+          <input class="form-control me-2" type="search" name="cari" placeholder="Cari judul buku / penulis buku / ISBN" aria-label="Cari buku" value="<?= $cari_keyword ?>">
           <button class="btn btn-outline-primary" type="submit">Cari</button>
       </form>
       <ul class="navbar-nav">

@@ -2,7 +2,7 @@
 [PHP 8.3.11](https://www.php.net/downloads.php)<br>
 [MySQL 8.0.30](https://dev.mysql.com/downloads/installer/)<br>
 [CodeIgniter 4.5.5](https://codeigniter.com)<br>
-[Bootstrap 5.3.3](https://getbootstrap.com/docs/5.3/getting-started/download/)
+[Bootstrap 5.3.3](https://getbootstrap.com/docs/5.3/getting-started/download/) (udh di-download, bisa offline)
 
 ### Info login buat ngetes webnya
 1. Admin:

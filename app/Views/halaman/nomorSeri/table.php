@@ -77,7 +77,7 @@
 
               <!-- Button trigger modal ubah -->
               <!-- Fungsi & modalnya di-include di bawah dari ubah.php -->
-              <abbr title="ubah data">
+              <abbr class="text-decoration-none" title="ubah data">
                 <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalUbah" data-title="Ubah Data Buku: <?= esc($nomor_seri_item['buku_judul']) ?>"
                 data-bs-judulBuku="<?= esc($nomor_seri_item['buku_judul']) ?>"
                 data-bs-statusBuku="<?= esc($nomor_seri_item['status_buku']) ?>"
@@ -97,7 +97,7 @@
               <!-- Fungsi & modalnya di layout/layout_utama.php -->
                
               <?php if ($aksi == 'seriController') : ?>
-                <abbr title="hapus data">
+                <abbr class="text-decoration-none" title="hapus data">
                   <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapusData"
                     data-bs-nama="<?= esc($nomor_seri_item['seri_kode']) ?>"
                     data-bs-url="<?= url_to('nomorSeriHapus', esc($nomor_seri_item['seri_id'])) ?>">

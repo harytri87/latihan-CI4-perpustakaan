@@ -46,13 +46,13 @@
                   <td><?= esc($kategori_item['kategori_nama']) ?></td>
                   <td><?= esc($kategori_item['kategori_rincian']) ?></td>
                   <td class="text-center" style="width: 21%;">
-                    <abbr title="ubah data">
+                    <abbr class="text-decoration-none" title="ubah data">
                       <a href="<?= route_to('kategoriUbahForm', esc($kategori_item['kategori_link'])) ?>" class="btn btn-warning btn-sm"><i class="bi bi-pencil-fill"></i></a>
                     </abbr>
 
                     <!-- Button trigger modal -->
 										<!-- Fungsi & modalnya di layout/layout_utama.php -->
-                    <abbr title="hapus data">
+                    <abbr class="text-decoration-none" title="hapus data">
 											<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapusData" data-bs-nama="<?= esc($kategori_item['kategori_nama']) ?>" data-bs-url="<?= url_to('kategoriHapus', esc($kategori_item['kategori_id'])) ?>">
 												<i class="bi bi-trash"></i>
 											</button>

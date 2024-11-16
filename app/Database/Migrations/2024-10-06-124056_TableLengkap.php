@@ -67,7 +67,7 @@ class TableLengkap extends Migration
             'updated_at datetime default current_timestamp on update current_timestamp'
         ]);
         $this->forge->addPrimaryKey('buku_id');
-        $this->forge->addUniqueKey('isbn');
+        $this->forge->addUniqueKey('isbn', 'slug'); // slug dari controller ditambah nama penulisnya biar mastiin ga ada duplikat
         $this->forge->addForeignKey('kategori_id', 'kategori', 'kategori_id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('buku');
         

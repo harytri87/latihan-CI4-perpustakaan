@@ -62,13 +62,13 @@
                   <td class="text-center">
                     <a href="<?= route_to('adminBukuRincian', esc($buku_item['slug'])) ?>" class="btn btn-primary btn-sm">Rincian</a>
 
-                    <abbr title="ubah data">
+                    <abbr class="text-decoration-none" title="ubah data">
                       <a href="<?= route_to('adminBukuUbahForm', esc($buku_item['slug'])) ?>" class="btn btn-warning btn-sm"><i class="bi bi-pencil-fill"></i></a>
                     </abbr>
 
                     <!-- Button trigger modal -->
 										<!-- Fungsi & modalnya di layout/layout_utama.php -->
-                    <abbr title="hapus data">
+                    <abbr class="text-decoration-none" title="hapus data">
 											<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapusData" data-bs-nama="<?= esc($buku_item['buku_judul']) ?>" data-bs-url="<?= url_to('adminBukuHapus', esc($buku_item['buku_id'])) ?>">
 												<i class="bi bi-trash"></i>
 											</button>
