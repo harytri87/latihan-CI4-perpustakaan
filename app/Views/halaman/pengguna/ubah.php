@@ -61,6 +61,26 @@
           </select>
           <label for="floatingGrupInput">Grup Level</label>
         </div>
+
+        <!-- Atas & bawah 2 contoh dropdown -->
+
+        <!-- Status -->
+        <div class="form-floating mb-2">
+          <?php
+          $pilihan_status = [
+            "Aktif"    => "Aktif",
+            "Berhenti" => "Berhenti"
+          ];
+
+          $hiasan = [
+            "class" => "form-control",
+            "id"    => "floatingStatusInput"
+          ];
+
+          echo form_dropdown("pengguna_status", $pilihan_status, old('pengguna_status') !== null ? old('pengguna_status') : esc($pengguna['pengguna_status']), $hiasan);
+          ?>
+          <label for="floatingStatusInput">Status</label>
+        </div>
         
         <!-- Foto Profil -->
         <div class="form-floating mb-2">

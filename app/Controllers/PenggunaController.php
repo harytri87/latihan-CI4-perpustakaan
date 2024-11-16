@@ -31,13 +31,13 @@ class PenggunaController extends BaseController
 		return view('halaman/pengguna/index', $data);
 	}
 
-	// NANTI DIUBAH PAS UDAH ADA FILTER EVEL GRUP
+	
 	public function show($pengguna_username = null)
 	{
 		$penggunaModel = new PenggunaModel();
 		$data = [
 			'pengguna' => $penggunaModel->getPengguna($pengguna_username),
-			'title'    => 'Rincian Pengguna | Perpustakaan'
+			'title'    => "Rincian Pengguna | Perpustakaan"
 		];
 		// dd($data['pengguna']['pengguna_nama']);
 
