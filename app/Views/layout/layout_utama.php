@@ -89,6 +89,64 @@
         }
       });
     });
+
+
+    // Referensi elemen input dan datalist buat Wishlist
+    // Variabelnya ditambahin kata "wishlist" biar ga tabrakan sama script lain
+    // User
+    const emailInputWishlist = document.getElementById('wishlistEmailInput');
+    const usernameInputWishlist = document.getElementById('wishlistUsernameInput');
+    const emailListWishlist = document.getElementById('wishlist_email_list');
+    // Buku
+    const judulBukuInputWishlist = document.getElementById('wishlistJudulInput');
+    const isbnBukuInputWishlist = document.getElementById('wishlistISBNInput');
+    const bukuListWishlist = document.getElementById('wishlist_buku_list');
+    // Foto
+    const fotoDivWishlist = document.getElementById('fotoDivWishlist');
+    const fotoImgWishlist = document.getElementById('fotoImgWishlist');
+
+    // Event saat user memilih dari emailList
+    emailInputWishlist.addEventListener('input', function () {
+      const options = emailListWishlist.options;
+      let found = false;
+
+      for (let i = 0; i < options.length; i++) {
+        if (options[i].value === this.value) {
+          // Masukkan data kode buku ke hidden input
+          usernameInputWishlist.value = options[i].getAttribute('data-username-wishlist');
+          found = true;
+          break;
+        }
+      }
+
+      if (!found) {
+        usernameInputWishlist.value = '';
+      }
+    });
+
+    // Event saat user memilih dari bukuList
+    judulBukuInputWishlist.addEventListener('input', function () {
+      const options = bukuListWishlist.options;
+      let found = false;
+
+      for (let i = 0; i < options.length; i++) {
+        if (options[i].value === this.value) {
+          // Masukkan data kode buku ke hidden input
+          isbnBukuInputWishlist.value = options[i].getAttribute('data-isbn-wishlist');
+          fotoImgWishlist.src = options[i].getAttribute('data-foto-wishlist');
+          fotoDivWishlist.style.display = 'block';
+
+          found = true;
+          break;
+        }
+      }
+
+      if (!found) {
+        isbnBukuInputWishlist.value = '';
+        fotoImgWishlist.src = '/';
+        fotoDivWishlist.style.display = 'none';
+      }
+    });
   </script>
 </body>
 </html>

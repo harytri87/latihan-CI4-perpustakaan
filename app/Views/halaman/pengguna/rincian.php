@@ -46,15 +46,24 @@
             Ubah Data
             <!-- Bisa buat semua, ngelink ke CRUD (ubah) pengguna tapi kalo bukan admin, ga bisa ngubah status sama grup level -->
           </a>
-          <a href="#" class="btn btn-sm btn-primary me-2 mt-1" style="width: 72px;">
+          <a href="<?= route_to('penggunaWishlist', esc($pengguna['pengguna_username'])) ?>" class="btn btn-sm btn-primary me-2 mt-1" style="width: 72px;">
             Wishlist
             <!-- Masih di halaman yg sama, table daftar wishlist -->
+            <!-- Ga jadi di halaman yang sama, takutnya paginate tabrakan sama table bawah -->
+            <!--
+              Halamannya ada info user sama kayak di halaman rincian, terus di bawahnya ada daftar data buku yang di-wishlist. Tulisan datanya tulisan biasa terus ada input text label buku sama dropdown statusnya. 
+
+              Tombol tambahkan peminjaman dihapus, masukin ke halaman bareng table daftar wishlist ini, ganti tulisan jadi Pengajuan Peminjaman.
+              Tombolnya ke CRUD tambah wishlist sama otomatis ngisi kolom username tapi redirect pas berhasil-nya beda.
+
+              Ada tombol "Konfirmasi Pengajuan"
+            -->
           </a>
           <a href="#" class="btn btn-sm btn-primary me-2 mt-1" style="width: 152px;">
             Riwayat Peminjaman
             <!-- Masih di halaman yg sama, table daftar peminjaman -->
           </a>
-          <a href="#" class="btn btn-sm btn-primary me-2 mt-1" style="width: 168px;">
+          <a href="<?= route_to('wishlistTambahForm') ?>?u=<?= esc($pengguna['pengguna_username']) ?>" class="btn btn-sm btn-primary me-2 mt-1" style="width: 168px;">
             Tambahkan Peminjaman
             <!-- Nanti ini ke CRUD (tambah) wishlist ngirim tanda tanya di linknya buat ngisi otomatis kolom username -->
           </a>

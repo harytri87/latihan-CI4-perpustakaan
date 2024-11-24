@@ -96,6 +96,16 @@ class NomorSeriModel extends Model
                     ->first();
     }
 
+    public function satuISBNStatus($isbn, $status)
+    {
+        return $this->select('nomor_seri.*, buku.buku_judul, buku.slug')
+                    ->join('buku', 'nomor_seri.isbn = buku.isbn', 'left')
+                    ->where(['nomor_seri.isbn' => $isbn])
+                    ->where(['nomor_seri.status_buku' => $status])
+                    ->groupBy('nomor_seri.seri_id')
+                    ->first();
+    }
+
     public function getISBN($isbn)
     {
         return $this->where(['isbn' => $isbn])->findAll();

@@ -17,6 +17,10 @@ $routes->group('profil', [], function($routes) {
     $routes->get('(:segment)/peminjaman/(:segment)', 'ProfilController::peminjamanRinci/$1/$2', ['as' => 'profilPeminjamanRinci']);
     // Daftar peminjamannya bentuk table, yg tampil per kode peminjaman
     // Kalo wishlist ga ada rincian, paling rinciannya ngelink ke rincian buku
+
+    // Filter biar yang belum login ga bisa logout. Soalnya di logout ada destroy() semua session.
+    $routes->get('logout', 'AuthController::logout', ['as' => 'authLogout']);
+    // $routes->get('logout', 'AuthController::logout', ['as' => 'authLogout', 'filter' => '']);
 });
 
 // ini di dalem grup biar dikasih filter yg udah login ga bisa ke sini
@@ -27,9 +31,6 @@ $routes->group('/', [], function($routes) {
     $routes->get('daftar', 'AuthController::registerView', ['as' => 'authDaftarForm']);
     $routes->post('daftar', 'AuthController::registerAction', ['as' => 'authDaftarAction']);
 });
-
-// Filter biar yang belum login ga bisa logout. Soalnya di logout ada destroy() semua session.
-$routes->get('logout', 'AuthController::logout', ['as' => 'authLogout', 'filter' => '']);
 
 $routes->group('grup', [], function($routes) {
     $routes->get('tambah', 'GrupController::new', ['as' => 'grupTambahForm']);
@@ -46,15 +47,10 @@ $routes->group('pengguna', [], function($routes) {
     $routes->post('/', 'PenggunaController::create', ['as' => 'penggunaTambahAction']);
     $routes->get('/', 'PenggunaController::index', ['as' => 'penggunaIndex']);
     $routes->get('(:segment)', 'PenggunaController::show/$1', ['as' => 'penggunaRincian']);
+    $routes->get('(:segment)/wishlist', 'PenggunaController::wishlist/$1', ['as' => 'penggunaWishlist']);
     $routes->get('(:segment)/ubah', 'PenggunaController::edit/$1', ['as' => 'penggunaUbahForm']);
     $routes->put('(:num)', 'PenggunaController::update/$1', ['as' => 'penggunaUbahAction']);
     $routes->delete('(:num)', 'PenggunaController::delete/$1', ['as' => 'penggunaHapus']);
-    
-    // Nanti ditambah 
-    $routes->get('(:segment)/wishlist', 'ProfilController::wishlist/$1', ['as' => 'profilWishlistPengguna']);
-    $routes->get('(:segment)/peminjaman', 'ProfilController::peminjaman/$1', ['as' => 'profilPeminjamanPengguna']);
-    $routes->get('(:segment)/peminjaman/(:segment)', 'ProfilController::peminjamanRinci/$1/$2', ['as' => 'profilPeminjamanPenggunaRinci']);
-    // Kalo wishlist ga ada rincian, paling rinciannya ngelink ke rincian buku
 });
 
 $routes->group('kategori', [], function($routes) {
@@ -88,30 +84,12 @@ $routes->group('data', [], function($routes) {
 });
 
 
-// Ini tampilan yg "dihias" buat pegawai & anggota. Kalo pegawai nanti di tampilan rincian buku ada link ke tampilan CRUD nomor seri. Tapi tetep pegawai juga bisa ngakses yang tampilan CRUD buku
-// Ada tombol "tambah stock" juga. Mungkin popup modal buat masukin jumlah buku yang mau ditambah. Nanti proses perulangan otomatis ke CRUD nomor seri
-
-// $routes->group('buku', [], function($routes) {
-//     $routes->get('tambah', 'BukuController::new', ['as' => 'bukuTambahForm']);
-//     $routes->post('/', 'BukuController::create', ['as' => 'bukuTambahAction']);
-//     $routes->get('/', 'BukuController::index', ['as' => 'bukuIndex']);
-//     $routes->get('(:segment)', 'BukuController::show/$1', ['as' => 'bukuRincian']);
-//     $routes->get('(:segment)/ubah', 'BukuController::edit/$1', ['as' => 'bukuUbahForm']);
-//     $routes->put('(:num)', 'BukuController::update/$1', ['as' => 'bukuUbahAction']);
-//     $routes->delete('(:num)', 'BukuController::delete/$1', ['as' => 'bukuHapus']);
-// });
-
-// Mungkin group buku sama profil di paling atas aja di bawah index
-// Nanti di profil ada filter khusus pengguna yang login & sesuai akunnya aja yg bisa ngakses profil
-// Pengguna A cuma bisa ngakses profil A, ga bisa ngakses profil B. Kalo pegawai atau admin mau ngakses profil pengguna lain, lewat group pengguna, bukan profil.
-
-// di wishlist sama peminjaman sebelah tombol cari ada dropdown buat statusnya
 $routes->group('wishlist', [], function($routes) {
     $routes->get('tambah', 'WishlistController::new', ['as' => 'wishlistTambahForm']);
     $routes->post('/', 'WishlistController::create', ['as' => 'wishlistTambahAction']);
     $routes->get('/', 'WishlistController::index', ['as' => 'wishlistIndex']);
-    $routes->get('(:segment)', 'WishlistController::show/$1', ['as' => 'wishlistRincian']);
-    $routes->get('(:segment)/ubah', 'WishlistController::edit/$1', ['as' => 'wishlistUbahForm']);
+    $routes->get('(:num)', 'WishlistController::show/$1', ['as' => 'wishlistRincian']);
+    $routes->get('(:num)/ubah', 'WishlistController::edit/$1', ['as' => 'wishlistUbahForm']);
     $routes->put('(:num)', 'WishlistController::update/$1', ['as' => 'wishlistUbahAction']);
     $routes->delete('(:num)', 'WishlistController::delete/$1', ['as' => 'wishlistHapus']);
 });

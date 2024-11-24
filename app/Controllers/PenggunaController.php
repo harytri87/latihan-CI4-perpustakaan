@@ -7,6 +7,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use App\Models\PenggunaModel;
 use App\Models\GrupModel;
+use App\Models\WishlistModel;
 
 class PenggunaController extends BaseController
 {
@@ -45,7 +46,32 @@ class PenggunaController extends BaseController
 			throw new PageNotFoundException('Tidak dapat menemukan data pengguna: ' . $pengguna_username);
 		}
 
+		$data['title'] = "Profil " . $data['pengguna']['pengguna_nama'] . " | Perpustakaan";
+
 		return view('halaman/pengguna/rincian', $data);
+	}
+
+	
+	public function wishlist($pengguna_username)
+	{
+		$penggunaModel = new PenggunaModel();
+		$wishlistModel = new WishlistModel();
+		$data = [
+			'pengguna' => $penggunaModel->getPengguna($pengguna_username),
+			'title'    => "Wishlist Anggota | Perpustakaan"
+		];
+		// dd($data['pengguna']['pengguna_nama']);
+
+		if ($data['pengguna'] === null) {
+			throw new PageNotFoundException('Tidak dapat menemukan data pengguna: ' . $pengguna_username);
+		}
+
+		$wishlist = $wishlistModel->wishlistPengguna($data['pengguna']['pengguna_id']);
+
+		$data['title'] = "Wishlist " . $data['pengguna']['pengguna_nama'] . " | Perpustakaan";
+		$data['wishlist_list'] = $wishlist;
+
+		return view('halaman/pengguna/wishlist', $data);
 	}
 
 	
