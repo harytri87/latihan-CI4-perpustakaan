@@ -19,7 +19,7 @@ class NomorSeriController extends BaseController
 		$cariStatus = $this->request->getVar('status');
 
 		$data = [
-			'nomor_seri_list' => $nomorSeriModel->getNomorSeri($cariKeyword, $cariStatus),
+			'nomor_seri_list' => $nomorSeriModel->getNomorSeri($cariKeyword, $cariStatus)->paginate(20),
 			'pager'           => $nomorSeriModel->pager,
 			'title'           => 'Data Buku | Perpustakaan',
 			'penomoran'       => 20,	// samain sama paginate() di model getNomorSeri()

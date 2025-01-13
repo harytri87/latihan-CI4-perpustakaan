@@ -14,5 +14,6 @@ class SemuaSeeder extends Seeder
         $this->call('BukuSeeder');
         $this->call('NomorSeriSeeder');
         $this->call('WishlistSeeder');
+        $this->call('PeminjamanSeeder');
     }
 }

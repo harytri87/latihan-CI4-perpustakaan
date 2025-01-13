@@ -89,17 +89,17 @@ class TableLengkap extends Migration
         $this->forge->addField([
             'peminjaman_id'        => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
             'peminjaman_kode'      => ['type' => 'varchar', 'constraint' => 20],
-            'peminjaman_waktu'     => ['type' => 'int', 'constraint' => 11, 'unsigned' => true],
+            'peminjaman_durasi'    => ['type' => 'int', 'constraint' => 11, 'unsigned' => true],
             'peminjaman_tanggal datetime default current_timestamp',
             'pengembalian_tanggal' => ['type' => 'datetime', 'null' => true],
             'seri_id'              => ['type' => 'int', 'constraint' => 11, 'unsigned' => true],
             'pengguna_id'          => ['type' => 'int', 'constraint' => 11, 'unsigned' => true],
             'peminjaman_status'    => ['type' => 'varchar', 'constraint' => 255],
-            'pengembalian_status'  => ['type' => 'varchar', 'constraint' => 255],
-            'denda'                => ['type' => 'varchar', 'constraint' => 255, 'default' => 0]
+            'pengembalian_status'  => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
+            'denda'                => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+            'keterangan'           => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
         ]);
         $this->forge->addPrimaryKey('peminjaman_id');
-        $this->forge->addUniqueKey('peminjaman_kode');
         $this->forge->addForeignKey('seri_id', 'nomor_seri', 'seri_id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('pengguna_id', 'pengguna', 'pengguna_id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('peminjaman');

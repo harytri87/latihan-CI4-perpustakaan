@@ -91,8 +91,25 @@ class WishlistModel extends Model
                     ->paginate(20);
     }
 
+    public function satuWishlist($wishlist_id)
+    {
+        // Satu wishlist buat CRUD / halaman admin
+
+        return $this->select('wishlist.*, nomor_seri.isbn, buku.buku_judul, buku.slug, buku.buku_foto, pengguna.pengguna_email, pengguna.pengguna_username')
+             ->join('nomor_seri', 'wishlist.seri_id = nomor_seri.seri_id', 'left')
+             ->join('buku', 'nomor_seri.isbn = buku.isbn', 'left')
+             ->join('pengguna', 'wishlist.pengguna_id = pengguna.pengguna_id', 'left')
+             ->where('wishlist.wishlist_id', $wishlist_id)
+             ->groupBy('wishlist.wishlist_id')
+             ->orderBy('pengguna.pengguna_email', "ASC")
+             ->first();
+
+    }
+
     public function wishlistPengguna($pengguna_id)
     {
+        // Semua wishlist dari satu pengguna
+
         return $this->select('wishlist.*, nomor_seri.seri_kode, nomor_seri.isbn, buku.buku_judul, buku.slug, buku.buku_foto, pengguna.pengguna_email, pengguna.pengguna_username')
                     ->join('nomor_seri', 'wishlist.seri_id = nomor_seri.seri_id', 'left')
                     ->join('buku', 'nomor_seri.isbn = buku.isbn', 'left')
@@ -103,6 +120,8 @@ class WishlistModel extends Model
 
     public function cekDuplikat($pengguna_id, $isbn)
     {
+        // Ngecek buku yang sama udah ada di daftar wishlist pengguna tersebut
+
         return $this->select('wishlist.*, nomor_seri.isbn')
                     ->join('nomor_seri', 'wishlist.seri_id = nomor_seri.seri_id', 'left')
                     ->where(['wishlist.pengguna_id' => $pengguna_id])

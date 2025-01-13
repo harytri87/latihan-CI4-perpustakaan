@@ -65,7 +65,7 @@ class NomorSeriModel extends Model
     
 	public function getNomorSeri($cari = "", $status = "")
 	{
-        $this->select('nomor_seri.*, buku.buku_judul, buku.slug')
+        $this->select('nomor_seri.*, buku.buku_judul, buku.slug, buku_foto')
              ->join('buku', 'nomor_seri.isbn = buku.isbn', 'left');
 
         if ($status != "") {
@@ -83,13 +83,11 @@ class NomorSeriModel extends Model
         }
 
         return $this->groupBy('nomor_seri.seri_id')
-                    ->orderBy('buku.buku_judul', "ASC")
-                    ->paginate(20);
+                    ->orderBy('buku.buku_judul', "ASC");
 	}
-
     public function satuNomorSeri($kode)
     {
-        return $this->select('nomor_seri.*, buku.buku_judul, buku.slug')
+        return $this->select('nomor_seri.*, buku.buku_judul, buku.slug, buku_foto')
                     ->join('buku', 'nomor_seri.isbn = buku.isbn', 'left')
                     ->where(['nomor_seri.seri_kode' => $kode])
                     ->groupBy('nomor_seri.seri_id')
@@ -98,7 +96,7 @@ class NomorSeriModel extends Model
 
     public function satuISBNStatus($isbn, $status)
     {
-        return $this->select('nomor_seri.*, buku.buku_judul, buku.slug')
+        return $this->select('nomor_seri.*, buku.buku_judul, buku.slug, buku_foto')
                     ->join('buku', 'nomor_seri.isbn = buku.isbn', 'left')
                     ->where(['nomor_seri.isbn' => $isbn])
                     ->where(['nomor_seri.status_buku' => $status])

@@ -21,8 +21,9 @@
               <div class="sampul-preview">
                 <img class="card-img sampul mt-1" src="<?= base_url('images/buku/') . esc($buku_item['buku_foto']) ?>" alt="<?= esc($buku_item['buku_foto']) ?>">
               </div>
+              <hr>
               <div class="card-body">
-                <h5 class="card-title text-center">
+                <h5 class="card-title text-center mb-3">
                   <abbr class="text-decoration-none" title="<?= esc($buku_item['buku_judul']) ?>">
                     <a class="text-reset text-decoration-none" href="<?= route_to('bukuRincian', esc($buku_item['slug'])) ?>">
                       <?= $tampil = mb_strlen($buku_item['buku_judul']) > $max_length ? mb_substr($buku_item['buku_judul'], 0, $max_length) . '...' : $buku_item['buku_judul']; ?>

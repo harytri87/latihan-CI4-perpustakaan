@@ -9,6 +9,10 @@ $routes->get('/', 'HomeController::index', ['as' => 'index']);
 $routes->get('buku/(:segment)', 'BukuController::show/$1', ['as' => 'bukuRincian']);
 
 $routes->group('profil', [], function($routes) {
+
+    // Atau mungkin di HomeController pake 1 method profil() terus isinya copy paste dari method show() di PenggunaController. Bedanya ada tambahan ngecek username yang di link sama ga sama username di session login. Kalo beda, munculin halaman NOT FOUND.
+    // Terus sisanya mirip rincian buku di route atas itu, routes baru tapi pake controller yang udah ada
+
     $routes->get('(:segment)', 'ProfilController::show/$1', ['as' => 'profilRincian']);
     $routes->get('(:segment)/ubah', 'ProfilController::edit/$1', ['as' => 'profilUbahForm']);
     $routes->put('(:num)', 'ProfilController::update/$1', ['as' => 'profilUbahAction']);
@@ -48,6 +52,7 @@ $routes->group('pengguna', [], function($routes) {
     $routes->get('/', 'PenggunaController::index', ['as' => 'penggunaIndex']);
     $routes->get('(:segment)', 'PenggunaController::show/$1', ['as' => 'penggunaRincian']);
     $routes->get('(:segment)/wishlist', 'PenggunaController::wishlist/$1', ['as' => 'penggunaWishlist']);
+    $routes->put('(:segment)/wishlist', 'PenggunaController::updateWishlist/', ['as' => 'penggunaUbahWishlist']);
     $routes->get('(:segment)/ubah', 'PenggunaController::edit/$1', ['as' => 'penggunaUbahForm']);
     $routes->put('(:num)', 'PenggunaController::update/$1', ['as' => 'penggunaUbahAction']);
     $routes->delete('(:num)', 'PenggunaController::delete/$1', ['as' => 'penggunaHapus']);

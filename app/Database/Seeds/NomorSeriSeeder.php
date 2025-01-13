@@ -44,7 +44,7 @@ class NomorSeriSeeder extends Seeder
             [
                 'seri_kode'   => '200 TIG ba 3',
                 'isbn'        => '3333333333333',
-                'status_buku' => 'tersedia'
+                'status_buku' => 'dipinjam'
             ],
             [
                 'seri_kode'   => '200 TIG ba 4',
@@ -55,12 +55,12 @@ class NomorSeriSeeder extends Seeder
             [
                 'seri_kode'   => '300 EMP bis 1',
                 'isbn'        => '4444444444444',
-                'status_buku' => 'tersedia'
+                'status_buku' => 'dipinjam'
             ],
             [
                 'seri_kode'   => '300 EMP bis 2',
                 'isbn'        => '4444444444444',
-                'status_buku' => 'tersedia'
+                'status_buku' => 'dipinjam'
             ],
             [
                 'seri_kode'   => '300 EMP bis 3',
@@ -108,7 +108,7 @@ class NomorSeriSeeder extends Seeder
             [
                 'seri_kode'   => '600 TUJ bt 3',
                 'isbn'        => '7777777777777',
-                'status_buku' => 'tersedia'
+                'status_buku' => 'rusak'
             ],
             [
                 'seri_kode'   => '600 TUJ bt 4',
@@ -124,7 +124,7 @@ class NomorSeriSeeder extends Seeder
             [
                 'seri_kode'   => '700 DEL bk 2',
                 'isbn'        => '8888888888888',
-                'status_buku' => 'tersedia'
+                'status_buku' => 'dipinjam'
             ],
             // 
             [
@@ -136,7 +136,7 @@ class NomorSeriSeeder extends Seeder
             [
                 'seri_kode'   => '900 SEP bs 1',
                 'isbn'        => '1010101010101',
-                'status_buku' => 'tersedia'
+                'status_buku' => 'dipinjam'
             ],
             // 
         ];

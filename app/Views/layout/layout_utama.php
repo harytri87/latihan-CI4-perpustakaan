@@ -96,10 +96,12 @@
     // User
     const emailInputWishlist = document.getElementById('wishlistEmailInput');
     const usernameInputWishlist = document.getElementById('wishlistUsernameInput');
+    const namaInputWishlist = document.getElementById('wishlistNamaInput');
     const emailListWishlist = document.getElementById('wishlist_email_list');
     // Buku
     const judulBukuInputWishlist = document.getElementById('wishlistJudulInput');
     const isbnBukuInputWishlist = document.getElementById('wishlistISBNInput');
+    const labelBukuWishlist = document.getElementById('wishlistLabelBukuInput');
     const bukuListWishlist = document.getElementById('wishlist_buku_list');
     // Foto
     const fotoDivWishlist = document.getElementById('fotoDivWishlist');
@@ -114,6 +116,7 @@
         if (options[i].value === this.value) {
           // Masukkan data kode buku ke hidden input
           usernameInputWishlist.value = options[i].getAttribute('data-username-wishlist');
+          namaInputWishlist.value = options[i].getAttribute('data-nama-wishlist');
           found = true;
           break;
         }
@@ -121,6 +124,7 @@
 
       if (!found) {
         usernameInputWishlist.value = '';
+        namaInputWishlist.value = '';
       }
     });
 
@@ -135,6 +139,7 @@
           isbnBukuInputWishlist.value = options[i].getAttribute('data-isbn-wishlist');
           fotoImgWishlist.src = options[i].getAttribute('data-foto-wishlist');
           fotoDivWishlist.style.display = 'block';
+          labelBukuWishlist.value = options[i].getAttribute('data-seriKode-wishlist');
 
           found = true;
           break;
@@ -145,6 +150,7 @@
         isbnBukuInputWishlist.value = '';
         fotoImgWishlist.src = '/';
         fotoDivWishlist.style.display = 'none';
+        labelBukuWishlist.value = '';
       }
     });
   </script>

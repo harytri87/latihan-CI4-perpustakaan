@@ -42,7 +42,7 @@ class WishlistController extends BaseController
     $bukuModel = new BukuModel();
     $penggunaModel = new PenggunaModel();
     $dataBuku = $bukuModel->findAll();
-    $dataPengguna = $penggunaModel->findAll();
+    $dataPengguna = $penggunaModel->getAktifBukanAdmin();
     $bukuList = [];
     $penggunaList = [];
 
@@ -52,6 +52,7 @@ class WishlistController extends BaseController
     }
 
     // Daftar pengguna buat option datalist
+     // Cuma anggota & pegawai aktif (non admin)
     foreach ($dataPengguna as $pengguna) {
       $penggunaList[$pengguna['pengguna_username']] = $pengguna['pengguna_email'];
     }
@@ -98,7 +99,14 @@ class WishlistController extends BaseController
     }
 
     if ($notif !== []) {
-      return redirect()->route('wishlistTambahForm')->with('errors', $notif)->withInput();
+      if (isset($dataPost['redirect'])) {
+        $redirect = "?u=" . $dataPost['pengguna_username'];
+
+        return redirect()
+          ->to(route_to('wishlistTambahForm') . $redirect)->with('errors', $notif)->withInput();
+      } else {
+        return redirect()->route('wishlistTambahForm')->with('errors', $notif)->withInput();
+      }
     }
 
     // Cek buku yang sama udah ada di wishlistnya belum
@@ -126,7 +134,14 @@ class WishlistController extends BaseController
 
     // Gagal input data
     if ($wishlistModel->save($data) === false) {
-      return redirect()->route('wishlistTambahForm')->with('errors', $wishlistModel->errors())->withInput();
+      if (isset($dataPost['redirect'])) {
+        $redirect = "?u=" . $dataPost['pengguna_username'];
+
+        return redirect()
+          ->to(route_to('wishlistTambahForm') . $redirect)->with('errors', $wishlistModel->errors())->withInput();
+      } else {
+        return redirect()->route('wishlistTambahForm')->with('errors', $wishlistModel->errors())->withInput();
+      }
     }
 
     // Berhasil input data
@@ -146,7 +161,7 @@ class WishlistController extends BaseController
     $penggunaModel = new PenggunaModel();
     $wishlist = $wishlistModel->satuWishlist($wishlist_id);
     $dataBuku = $bukuModel->findAll();
-    $dataPengguna = $penggunaModel->findAll();
+    $dataPengguna = $penggunaModel->getAktifBukanAdmin();
     $bukuList = [];
     $penggunaList = [];
 

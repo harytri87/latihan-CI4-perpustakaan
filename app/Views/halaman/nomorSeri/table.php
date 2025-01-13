@@ -1,7 +1,6 @@
 <div class="row mb-3 justify-content-between">
   <div class="col-12 mb-3">
     <h4>Daftar Label Buku</h4>
-    <p>Pas udah ada CRUD wishlist & peminjaman, seedernya diubah lagi nyesuain CRUD itu</p>
   </div>
   <form action="" method="get" class="d-sm-flex justify-content-between" role="search">
     <?php if ($aksi == "seriController") : ?>

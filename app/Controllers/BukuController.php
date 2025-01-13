@@ -47,7 +47,7 @@ class BukuController extends BaseController
 		$data = [
 			'buku'            => $buku,
 			'title'           => 'Rincian Buku | Perpustakaan',
-			'penomoran'       => 20,	// samain sama paginate() di model getNomorSeri()
+			'penomoran'       => 20,	// samain sama paginate() di getNomorSeri()
 			'cari_status'     => $cariStatus,
 			'aksi'						=> 'bukuController',	// Tanda manggil tampilan tablenya dari controller ini
 		];
@@ -58,7 +58,7 @@ class BukuController extends BaseController
 		}
 
     $data['jumlah_tersedia'] = $nomorSeriModel->countTersedia($buku['isbn']);
-    $data['nomor_seri_list'] = $nomorSeriModel->getNomorSeri($buku['isbn'], $cariStatus);
+    $data['nomor_seri_list'] = $nomorSeriModel->getNomorSeri($buku['isbn'], $cariStatus)->paginate(20);
     $data['pager'] = $nomorSeriModel->pager;
 
 		return view('halaman/buku/rincian', $data);

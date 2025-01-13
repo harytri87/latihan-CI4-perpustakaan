@@ -8,6 +8,10 @@ use CodeIgniter\Exceptions\PageNotFoundException;
 use App\Models\PenggunaModel;
 use App\Models\GrupModel;
 use App\Models\WishlistModel;
+use App\Models\PeminjamanModel;
+use App\Models\NomorSeriModel;
+use CodeIgniter\I18n\Time;
+use CodeIgniter\Database\Exceptions\DatabaseException;
 
 class PenggunaController extends BaseController
 {
@@ -35,10 +39,22 @@ class PenggunaController extends BaseController
 	
 	public function show($pengguna_username = null)
 	{
+		// Rincian pengguna & riwayat peminjaman
+
+		$cariKeyword = $this->request->getVar('cari');
+		$cariStatus = $this->request->getVar('status');
+
 		$penggunaModel = new PenggunaModel();
+		$peminjamanModel = new PeminjamanModel();
+
 		$data = [
-			'pengguna' => $penggunaModel->getPengguna($pengguna_username),
-			'title'    => "Rincian Pengguna | Perpustakaan"
+			'pengguna'				=> $penggunaModel->getPengguna($pengguna_username),
+			'peminjaman_list' => $peminjamanModel->getPeminjaman($cariKeyword, $cariStatus, $pengguna_username),
+			'pager'         	=> $peminjamanModel->pager,
+			'title'         	=> 'Rincian Pengguna | Perpustakaan',
+			'penomoran'     	=> 20,	// samain sama paginate() di model getPeminjaman()
+			'cari_keyword'  	=> $cariKeyword,
+			'cari_status'   	=> $cariStatus
 		];
 		// dd($data['pengguna']['pengguna_nama']);
 
@@ -50,30 +66,6 @@ class PenggunaController extends BaseController
 
 		return view('halaman/pengguna/rincian', $data);
 	}
-
-	
-	public function wishlist($pengguna_username)
-	{
-		$penggunaModel = new PenggunaModel();
-		$wishlistModel = new WishlistModel();
-		$data = [
-			'pengguna' => $penggunaModel->getPengguna($pengguna_username),
-			'title'    => "Wishlist Anggota | Perpustakaan"
-		];
-		// dd($data['pengguna']['pengguna_nama']);
-
-		if ($data['pengguna'] === null) {
-			throw new PageNotFoundException('Tidak dapat menemukan data pengguna: ' . $pengguna_username);
-		}
-
-		$wishlist = $wishlistModel->wishlistPengguna($data['pengguna']['pengguna_id']);
-
-		$data['title'] = "Wishlist " . $data['pengguna']['pengguna_nama'] . " | Perpustakaan";
-		$data['wishlist_list'] = $wishlist;
-
-		return view('halaman/pengguna/wishlist', $data);
-	}
-
 	
 	public function new()
 	{
@@ -243,5 +235,122 @@ class PenggunaController extends BaseController
 		}
 
 		return redirect()->route('penggunaIndex')->with('message', 'Data pengguna berhasil dihapus!');
+	}
+	
+
+	public function wishlist($pengguna_username)
+	{
+		// Menampilkan daftar wishlist pengguna
+
+		$penggunaModel = new PenggunaModel();
+		$wishlistModel = new WishlistModel();
+		$data = [
+			'pengguna' => $penggunaModel->getPengguna($pengguna_username),
+			'title'    => "Wishlist Anggota | Perpustakaan"
+		];
+
+		if ($data['pengguna'] === null) {
+			throw new PageNotFoundException('Tidak dapat menemukan data pengguna: ' . $pengguna_username);
+		}
+
+		$wishlist = $wishlistModel->wishlistPengguna($data['pengguna']['pengguna_id']);
+
+		$data['title'] = "Wishlist " . $data['pengguna']['pengguna_nama'] . " | Perpustakaan";
+		$data['wishlist_list'] = $wishlist;
+
+		return view('halaman/pengguna/wishlist', $data);
+	}
+
+	public function updateWishlist()
+	{
+		// Nambahin wishlist ke peminjaman
+
+		$db = \Config\Database::connect();
+		$waktu = new Time();
+		$wishlistModel = new WishlistModel();
+		$seriModel = new NomorSeriModel();
+		$peminjamanModel = new PeminjamanModel();
+		$penggunaModel = new PenggunaModel();
+		$dataPost = $this->request->getPost();
+		$notif = [];
+		$peminjamanDurasi = 7;
+		$peminjamanStatus = "dipinjam";
+
+		$tanggalKode = $waktu->toLocalizedString('ddMMyyyy');
+
+		// Loop data buat ngefilter status "Konfirmasi"
+		foreach ($dataPost['status'] as $key => $status) {
+			if ($status === 'konfirmasi') {
+				$wishlist[] = [
+					'wishlist_id' => $dataPost['wishlist_id'][$key],
+					'pengguna_id' => $dataPost['pengguna_id'][$key],
+					'seri_kode'		=> $dataPost['seri_kode'][$key],
+				];
+			}
+		}
+
+		if (!isset($wishlist)) {
+			return redirect()->back()->with('errors', ['Tidak ada data wishlist yang dikonfirmasi']);
+		}
+
+		foreach ($wishlist as $key => $item) {
+			$seri = $seriModel->satuNomorSeri($item['seri_kode']);
+
+			// Cek ketersediaan buku
+			if ($seri === null) {
+				$notif[0] = 'Label buku tidak sesuai';
+			} else {
+				if ($seri['status_buku'] !== 'tersedia') {
+					$notif[0] = 'Label buku sedang tidak tersedia';
+				}
+			}
+
+			if ($notif !== []) {
+				return redirect()->back()->with('errors', $notif);
+			}
+
+			// Misahin array $wishlist jadi 3 array lain
+			// Array pertama buat hapus data table wishlist
+			$wishlist_id[$key]['wishlist_id'] = $item['wishlist_id'];
+			
+			// Array kedua buat nambahin data table peminjaman
+			$dataPeminjaman[$key]['peminjaman_kode'] = $item['pengguna_id'] . "-" . $tanggalKode;
+			$dataPeminjaman[$key]['peminjaman_durasi'] = $peminjamanDurasi;
+			$dataPeminjaman[$key]['peminjaman_tanggal'] = $waktu;
+			$dataPeminjaman[$key]['seri_id'] = $seri['seri_id'];
+			$dataPeminjaman[$key]['pengguna_id'] = $item['pengguna_id'];
+			$dataPeminjaman[$key]['peminjaman_status'] = $peminjamanStatus;
+
+			// Array ketiga buat ngubah status nomor_seri jadi "dipinjam"
+			$dataNomorSeri[$key]['seri_id'] = $seri['seri_id'];
+			$dataNomorSeri[$key]['status_buku'] = $peminjamanStatus;
+		}
+
+		$pengguna = $penggunaModel->find($dataPost['pengguna_id']);
+
+		$db->transStart();
+
+		try {
+			// Input data ke table peminjaman
+			$peminjamanModel->insertBatch($dataPeminjaman);
+
+			// Update data table nomor_seri
+			$seriModel->updateBatch($dataNomorSeri, 'seri_id');
+
+			// Ngehapus data table wishlist
+			$wishlistIds = array_column($wishlist_id, 'wishlist_id');
+			$wishlistModel->whereIn('wishlist_id', $wishlistIds)->delete();
+
+			$db->transComplete();
+
+			if ($db->transStatus() === false) {
+				throw new DatabaseException('Proses gagal.');
+			}
+
+			return redirect()->route('penggunaRincian', [$pengguna[0]['pengguna_username']])->with('message', 'Data peminjaman berhasil ditambahkan.');
+		} catch (DatabaseException $e) {
+				$db->transRollback();
+				return redirect()->back()->with('errors', $e->getMessage());
+		}
 	}
 }

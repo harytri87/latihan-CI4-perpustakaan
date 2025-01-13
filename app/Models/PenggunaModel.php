@@ -104,4 +104,11 @@ class PenggunaModel extends Model
 
         return $this->paginate(20);
     }
+
+    public function getAktifBukanAdmin()
+    {
+        return $this->where('grup_id !=', 1)
+                    ->where('pengguna_status', 'aktif')
+                    ->findAll();
+    }
 }

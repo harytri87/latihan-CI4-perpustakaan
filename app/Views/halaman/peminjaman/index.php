@@ -4,86 +4,17 @@
 
   <div class="card container my-4">
     <div class="card-body">
+
       <?= $this->include('layout/inc/alert.php') ?>
-
-      <!--Profil   -->
-      <div class="row">
-        <div class="col-10 col-lg-11">
-          <h5 class="card-title mb-3">Profil</h5>
-          
-          <!-- Data Profil -->
-          <div class="row table-responsive">
-            <table class="table">
-              <tbody>
-                <tr>
-                  <td>Nama</td>
-                  <td>:</td>
-                  <td>
-                    <?= esc($pengguna['pengguna_nama']) ?>
-                  </td>
-                </tr>
-                
-                <tr>
-                  <td>Username</td>
-                  <td>:</td>
-                  <td>
-                    <?= esc($pengguna['pengguna_username']) ?>
-                  </td>
-                </tr>
-                
-                <tr>
-                  <td>Email</td>
-                  <td>:</td>
-                  <td>
-                    <?= esc($pengguna['pengguna_email']) ?>
-                  </td>
-                </tr>
-                
-                <tr>
-                  <td>Status</td>
-                  <td>:</td>
-                  <td>
-                    <?= esc($pengguna['grup_nama']) . " - " . esc($pengguna['pengguna_status']) ?>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Foto Profil -->
-        <div class="col">
-          <div class="foto-profil mb-3">
-            <img class="foto-profil" src="<?= esc($pengguna['pengguna_foto']) !== null ? base_url('images/profil/') . esc($pengguna['pengguna_foto']) : base_url('images/profil/foto-profil-default.png') ?>">
-          </div>
-        </div>
-      </div>
-
-      <!-- Tombol -->
-      <div class="row mt-3 justify-content-center">
-          <a href="#" class="btn btn-sm btn-primary me-2 mt-1" style="width: 88px;">
-            Ubah Data
-            <!-- Bisa buat semua, ngelink ke CRUD (ubah) pengguna tapi kalo bukan admin, ga bisa ngubah status sama grup level -->
-          </a>
-          <a href="<?= route_to('penggunaWishlist', esc($pengguna['pengguna_username'])) ?>" class="btn btn-sm btn-primary me-2 mt-1" style="width: 72px;">
-            Wishlist
-          </a>
-      </div>
-    </div>
-  </div>
-
-  <div class="card container my-4">
-    <div class="card-body">
       
-			<div class="row mb-3 justify-content-between">
+      <div class="row mb-3 justify-content-between">
         <div class="col-12 mb-3">
-          <h4>Riwayat Peminjaman</h4>
+          <h4>Peminjaman</h4>
         </div>
-        <!-- Pencarian -->
         <div class="col-9">
           <form action="" method="get" class="d-lg-flex justify-content-between" role="search">
               <!-- Cari sesuai keyword -->
-              <input class="form-control me-2 mb-2" type="search" name="cari" id="cari" placeholder="Cari kode peminjaman / judul buku" value="<?= $cari_keyword = esc($cari_keyword) ?? "" ?>" aria-label="Cari peminjaman">
+              <input class="form-control me-2 mb-2" type="search" name="cari" id="cari" placeholder="Cari kode peminjaman / nama / email anggota" value="<?= $cari_keyword = esc($cari_keyword) ?? "" ?>" aria-label="Cari peminjaman">
 
               <!-- cari sesuai status -->
               <?php
@@ -108,7 +39,7 @@
           </form>
         </div>
         <div class="col">
-          <a href="<?= route_to('peminjamanTambahForm') ?>?u=<?= esc($pengguna['pengguna_username']) ?>" class="btn btn-primary float-end">Tambah Peminjaman</a>
+          <a href="<?= route_to('peminjamanTambahForm') ?>" class="btn btn-primary float-end">Tambah</a>
         </div>
       </div>
 
@@ -122,7 +53,9 @@
               <tr>
                 <th class="align-middle text-center">#</th>
                 <th class="align-middle">Kode</th>
-                <th class="align-middle">Judul Buku</th>
+                <th class="align-middle">Nama Peminjam</th>
+                <th class="align-middle">Email Peminjam</th>
+                <th>Judul Buku</th>
                 <th class="align-middle">Status</th>
                 <th class="align-middle text-center">Aksi</th>
               </tr>
@@ -132,19 +65,42 @@
 
                 <?php
                   $sisaHari = esc($peminjaman_item['sisa_hari']) >= 0 ? "sisa " . esc($peminjaman_item['sisa_hari']) . " hari" : 'telat ' . substr(esc($peminjaman_item['sisa_hari']), 1) . " hari";
+                  
+                  $max_length = 20;
                 ?>
                 
                 <tr>
                   <td class="text-center"><?= $no++ ?></td>
                   <td><?= esc($peminjaman_item['peminjaman_kode']) ?></td>
-                  <td><?= esc($peminjaman_item['buku_judul']) ?></td>
+                  <td><?= esc($peminjaman_item['pengguna_nama']) ?></td>
+                  <td><?= esc($peminjaman_item['pengguna_email']) ?></td>
+                  <td>
+                    <abbr class="text-decoration-none" title="<?= esc($peminjaman_item['buku_judul']) ?>">
+                      <a class="text-reset text-decoration-none" href="<?= route_to('bukuRincian', esc($peminjaman_item['slug'])) ?>">
+                        <?= $tampil = mb_strlen($peminjaman_item['buku_judul']) > $max_length ? mb_substr($peminjaman_item['buku_judul'], 0, $max_length) . '...' : $peminjaman_item['buku_judul']; ?>
+                      </a>
+                    </abbr>
+                  </td>
                   <td>
                     <?= esc($peminjaman_item['pengembalian_status']) !== null ?
                       esc($peminjaman_item['pengembalian_status']) :
                       $sisaHari ?>
                   </td>
                   <td class="text-center">
-                  	<a href="<?= route_to('peminjamanRincian', esc($peminjaman_item['peminjaman_id'])) ?>?u=<?= esc($pengguna['pengguna_username']) ?>" class="btn btn-primary btn-sm">Rincian</a>
+
+                    <a href="<?= route_to('peminjamanRincian', esc($peminjaman_item['peminjaman_id'])) ?>" class="btn btn-primary btn-sm">Rincian</a>
+
+                    <abbr class="text-decoration-none" title="ubah data">
+                      <a href="<?= route_to('peminjamanUbahForm', esc($peminjaman_item['peminjaman_id'])) ?>" class="btn btn-warning btn-sm"><i class="bi bi-pencil-fill"></i></a>
+                    </abbr>
+
+                    <!-- Button trigger modal -->
+										<!-- Fungsi & modalnya di layout/layout_utama.php -->
+                    <abbr class="text-decoration-none" title="hapus data">
+											<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapusData" data-bs-nama="nomor <?= $no - 1; ?>" data-bs-url="<?= url_to('peminjamanHapus', esc($peminjaman_item['peminjaman_id'])) ?>">
+												<i class="bi bi-trash"></i>
+											</button>
+                    </abbr>
                   </td>
                 </tr>
 
@@ -164,7 +120,6 @@
 						<h4>Data peminjaman tidak ditemukan</h4>
         <?php endif ?>
       </div>
-    
     </div>
   </div>
 

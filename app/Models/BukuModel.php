@@ -124,6 +124,12 @@ class BukuModel extends Model
                     ->paginate(20);
     }
 
+    public function cekAda($judul)
+    {
+        return $this->where(['buku_judul' => $judul])
+                    ->countAllResults();
+    }
+
     public function satuBuku($slug)
     {
         // Satu buku, rinciannya
