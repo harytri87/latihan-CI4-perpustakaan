@@ -5,38 +5,35 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
+
+// halaman utama
 $routes->get('/', 'HomeController::index', ['as' => 'index']);
 $routes->get('buku/(:segment)', 'BukuController::show/$1', ['as' => 'bukuRincian']);
 
-$routes->group('profil', [], function($routes) {
-
-    // Atau mungkin di HomeController pake 1 method profil() terus isinya copy paste dari method show() di PenggunaController. Bedanya ada tambahan ngecek username yang di link sama ga sama username di session login. Kalo beda, munculin halaman NOT FOUND.
-    // Terus sisanya mirip rincian buku di route atas itu, routes baru tapi pake controller yang udah ada
-
-    $routes->get('(:segment)', 'ProfilController::show/$1', ['as' => 'profilRincian']);
-    $routes->get('(:segment)/ubah', 'ProfilController::edit/$1', ['as' => 'profilUbahForm']);
-    $routes->put('(:num)', 'ProfilController::update/$1', ['as' => 'profilUbahAction']);
-    $routes->get('(:segment)/wishlist', 'ProfilController::wishlist/$1', ['as' => 'profilWishlist']);
-    $routes->get('(:segment)/peminjaman', 'ProfilController::peminjaman/$1', ['as' => 'profilPeminjaman']);
-    $routes->get('(:segment)/peminjaman/(:segment)', 'ProfilController::peminjamanRinci/$1/$2', ['as' => 'profilPeminjamanRinci']);
-    // Daftar peminjamannya bentuk table, yg tampil per kode peminjaman
-    // Kalo wishlist ga ada rincian, paling rinciannya ngelink ke rincian buku
-
-    // Filter biar yang belum login ga bisa logout. Soalnya di logout ada destroy() semua session.
-    $routes->get('logout', 'AuthController::logout', ['as' => 'authLogout']);
-    // $routes->get('logout', 'AuthController::logout', ['as' => 'authLogout', 'filter' => '']);
-});
+// Nambah wishlist dari halaman rincian buku (halaman utama)
+$routes->post('buku/(:segment)', 'HomeController::tambahWishlist/$1', ['as' => 'bukuRincianWishlist', 'filter' => 'grup']);
 
 // ini di dalem grup biar dikasih filter yg udah login ga bisa ke sini
 // atau bisa juga sih di controllernya kayak yg di CI Shield
-$routes->group('/', [], function($routes) {
+$routes->group('/', ['filter' => 'masuk'], function($routes) {
     $routes->get('login', 'AuthController::loginView', ['as' => 'authLoginForm']);
     $routes->post('login', 'AuthController::loginAction', ['as' => 'authLoginAction']);
-    $routes->get('daftar', 'AuthController::registerView', ['as' => 'authDaftarForm']);
-    $routes->post('daftar', 'AuthController::registerAction', ['as' => 'authDaftarAction']);
+    $routes->get('daftar/(:segment)', 'PenggunaController::new/$1', ['as' => 'authDaftarForm']);
+    $routes->post('daftar/(:segment)', 'PenggunaController::create/$1', ['as' => 'authDaftarAction']);
 });
 
-$routes->group('grup', [], function($routes) {
+$routes->group('profil', ['filter' => 'grup'], function($routes) {
+    // Filter biar yang belum login ga bisa logout. Soalnya di logout ada destroy() semua session.
+    $routes->get('logout', 'AuthController::logout', ['as' => 'authLogout']);
+
+    $routes->get('(:segment)', 'PenggunaController::show/$1', ['as' => 'profilRincian']);
+    $routes->get('(:segment)/ubah', 'PenggunaController::edit/$1', ['as' => 'profilUbahForm']);
+    $routes->put('(:num)', 'PenggunaController::update/$1', ['as' => 'profilUbahAction']);
+    $routes->get('(:segment)/wishlist', 'PenggunaController::wishlist/$1', ['as' => 'profilWishlist']);
+    $routes->get('(:segment)/peminjaman/(:segment)', 'PenggunaController::peminjamanRinci/$1/$2', ['as' => 'profilPeminjamanRinci']);
+});
+
+$routes->group('grup', ['filter' => 'grup:Admin'], function($routes) {
     $routes->get('tambah', 'GrupController::new', ['as' => 'grupTambahForm']);
     $routes->post('/', 'GrupController::create', ['as' => 'grupTambahAction']);
     $routes->get('/', 'GrupController::index', ['as' => 'grupIndex']);
@@ -46,9 +43,9 @@ $routes->group('grup', [], function($routes) {
     $routes->delete('(:num)', 'GrupController::delete/$1', ['as' => 'grupHapus']);
 });
 
-$routes->group('pengguna', [], function($routes) {
-    $routes->get('tambah', 'PenggunaController::new', ['as' => 'penggunaTambahForm']);
-    $routes->post('/', 'PenggunaController::create', ['as' => 'penggunaTambahAction']);
+$routes->group('pengguna', ['filter' => 'grup:Admin, Pegawai'], function($routes) {
+    $routes->get('tambah/(:segment)', 'PenggunaController::new/$1', ['as' => 'penggunaTambahForm']);
+    $routes->post('(:segment)', 'PenggunaController::create/$1', ['as' => 'penggunaTambahAction']);
     $routes->get('/', 'PenggunaController::index', ['as' => 'penggunaIndex']);
     $routes->get('(:segment)', 'PenggunaController::show/$1', ['as' => 'penggunaRincian']);
     $routes->get('(:segment)/wishlist', 'PenggunaController::wishlist/$1', ['as' => 'penggunaWishlist']);
@@ -58,7 +55,7 @@ $routes->group('pengguna', [], function($routes) {
     $routes->delete('(:num)', 'PenggunaController::delete/$1', ['as' => 'penggunaHapus']);
 });
 
-$routes->group('kategori', [], function($routes) {
+$routes->group('kategori', ['filter' => 'grup:Admin, Pegawai'], function($routes) {
     $routes->get('tambah', 'KategoriController::new', ['as' => 'kategoriTambahForm']);
     $routes->post('/', 'KategoriController::create', ['as' => 'kategoriTambahAction']);
     $routes->get('/', 'KategoriController::index', ['as' => 'kategoriIndex']);
@@ -69,7 +66,7 @@ $routes->group('kategori', [], function($routes) {
 });
 
 // Ini tampilan buku & nomor seri mode CRUD
-$routes->group('data', [], function($routes) {
+$routes->group('data', ['filter' => 'grup:Admin, Pegawai'], function($routes) {
     $routes->get('buku/tambah', 'BukuController::new', ['as' => 'adminBukuTambahForm']);
     $routes->post('buku', 'BukuController::create', ['as' => 'adminBukuTambahAction']);
     $routes->get('buku', 'BukuController::index', ['as' => 'adminBukuIndex']);
@@ -89,7 +86,7 @@ $routes->group('data', [], function($routes) {
 });
 
 
-$routes->group('wishlist', [], function($routes) {
+$routes->group('wishlist', ['filter' => 'grup:Admin, Pegawai'], function($routes) {
     $routes->get('tambah', 'WishlistController::new', ['as' => 'wishlistTambahForm']);
     $routes->post('/', 'WishlistController::create', ['as' => 'wishlistTambahAction']);
     $routes->get('/', 'WishlistController::index', ['as' => 'wishlistIndex']);
@@ -99,7 +96,7 @@ $routes->group('wishlist', [], function($routes) {
     $routes->delete('(:num)', 'WishlistController::delete/$1', ['as' => 'wishlistHapus']);
 });
 
-$routes->group('peminjaman', [], function($routes) {
+$routes->group('peminjaman', ['filter' => 'grup:Admin, Pegawai'], function($routes) {
     $routes->get('tambah', 'PeminjamanController::new', ['as' => 'peminjamanTambahForm']);
     $routes->post('/', 'PeminjamanController::create', ['as' => 'peminjamanTambahAction']);
     $routes->get('/', 'PeminjamanController::index', ['as' => 'peminjamanIndex']);

@@ -14,13 +14,13 @@ Untuk anggota perpustakaan yang tidak tahu tentang web ini, data email dan usern
 
 ### Info login buat ngetes webnya
 1. Admin:
-   - admin
+   - admin@example.net
    - admin12345
 2. Pegawai:
-   - dudungsurudung
+   - dudungsurudung@example.net
    - dudung12345
 3. Anggota:
-   - dadangdaradang
+   - dadangdaradang@example.net
    - dadang12345
    
 *Info login yg lain ada di file seeder app\Database\Seeds\PenggunaSeeder.php*

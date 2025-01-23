@@ -85,12 +85,14 @@ class PenggunaModel extends Model
     // protected $afterDelete    = [];
 
     
-	public function getPengguna(string $pengguna_username = null)
+	public function getPengguna(string $pengguna = null)
 	{
         $this->select('*')->join('grup', 'grup.grup_id = pengguna.grup_id')->orderBy('pengguna.grup_id, pengguna.pengguna_nama');
     
-		if ($pengguna_username !== null) {
-            return $this->where(['pengguna_username' => $pengguna_username])->first();
+		if ($pengguna !== null) {
+            return $this->where(['pengguna_username' => $pengguna])
+                        ->orWhere(['pengguna_email' => $pengguna])
+                        ->first();
 		}
 
         return $this->paginate(20);
@@ -105,10 +107,31 @@ class PenggunaModel extends Model
         return $this->paginate(20);
     }
 
+    // cara nulis fungsi2 di bawah beda sama yg di atas soalnya pas pertama belajar belum terlalu ngerti
+
     public function getAktifBukanAdmin()
     {
         return $this->where('grup_id !=', 1)
                     ->where('pengguna_status', 'aktif')
                     ->findAll();
+    }
+
+    public function getNonAdmin($cari = "")
+    {
+        // Buat di halaman CRUD pengguna kalo yang login bukan admin
+        $this->select('*')
+              ->join('grup', 'grup.grup_id = pengguna.grup_id');
+    
+
+		if ($cari != "") {
+            $this->groupStart()
+                    ->like('pengguna_email', $cari)
+                    ->orLike('pengguna_nama', $cari)
+                 ->groupEnd();
+        }
+
+        return $this->where('grup.grup_nama', 'Anggota')
+                    ->orderBy('pengguna.grup_id, pengguna.pengguna_nama')
+                    ->paginate(20);
     }
 }

@@ -2,6 +2,8 @@
 
 <?= $this->section('content') ?>
 
+  <?php $session = session(); ?>
+
   <!-- Tampilan rincian buku -->
   <div class="card container my-4">
     <div class="card-body">
@@ -81,42 +83,77 @@
               : <?= esc($jumlah_tersedia) ?> buku tersedia
             </div>
           </div>
-          <div class="row mb-2">
-            <div class="col-lg-2 col-3">
-              Jumlah
+          
+          <?php if ($halaman === 'data') : ?>
+            <div class="row mb-2">
+              <div class="col-lg-2 col-3">
+                Jumlah
+              </div>
+              <div class="col-lg-10 col-9">
+                : <?= esc($buku['jumlah_buku']) ?> buku total
+              </div>
             </div>
-            <div class="col-lg-10 col-9">
-              : <?= esc($buku['jumlah_buku']) ?> buku total
-            </div>
-          </div>
+          <?php endif ?>
         </div>
       </div>
 
       <!-- Tombol -->
-       <div class="row mb-3 justify-content-center">
-        <a href="<?= route_to('adminBukuUbahForm', esc($buku['slug'])) ?>" class="btn btn-primary btn-sm me-2" style="width: 120px;">
-          Ubah Data Buku
-        </a>
+      <div class="row mb-3 justify-content-center">
+        <?php if (esc($halaman) === 'data') : ?>
+          <!-- Dari halaman CRUD -->
+          <a href="<?= route_to('adminBukuUbahForm', esc($buku['slug'])) ?>" class="btn btn-primary btn-sm me-2" style="width: 120px;">
+            Ubah Data Buku
+          </a>
+        <?php endif ?>
 
-        <!-- Ini harus bikin controller baru kayaknya, yang nerima pengguna_id & seri_id terus masukin data ke wishlist -->
-        <?php if ($jumlah_tersedia > 0) : ?>
-          <a href="#" class="btn btn-primary btn-sm me-2" style="width: 144px;">
-            Masukan ke Wishlist
-          </a>
-        <?php else : ?>
-          <a href="#" class="btn btn-secondary btn-sm me-2" style="width: 144px; pointer-events: none;">
-            Masukan ke Wishlist
-          </a>
+        <?php if (esc($halaman) === 'buku') : ?>
+          <!-- Dari halaman utama, ada tombol buat wishlist -->
+          <!-- Form buat ngirim data ngisi table wishlist -->
+          <?= form_open(route_to('bukuRincianWishlist', esc($buku['slug']))) ?>
+            <!-- Username -->
+            <div class="form-floating mb-2">
+              <input type="hidden" name="pengguna_username" id="wishlistUsernameInput" class="form-control" placeholder="Username" value="<?= $username = $session->get('username') ?? "" ?>">
+              <!-- <label for="wishlistUsernameInput">Username</label> -->
+            </div>
+
+            <!-- ISBN -->
+            <div class="form-floating mb-2">
+              <input type="hidden" name="isbn" id="wishlistISBNInput" class="form-control" placeholder="ISBN" minlength="13" maxlength="13" value="<?= esc($buku['isbn']) ?>">
+              <!-- <label for="wishlistISBNInput">ISBN</label> -->
+            </div>
+
+            <!-- Tombol -->
+            <?php if ($jumlah_tersedia > 0 && $boleh_wishlist === true) : ?>
+              <div class="d-grid col-5 col-lg-3 col-md-4 mx-auto m-3">
+                <button type="submit" class="btn btn-primary btn-sm">Masukan ke wishlist</button>
+              </div>
+            <?php elseif ($boleh_wishlist === false) : ?>
+              <div class="d-grid col-5 col-lg-3 col-md-4 mx-auto m-3">
+                <a href="#" class="btn btn-secondary btn-sm" style="pointer-events: none;">
+                  Sudah ada di wishlist
+                </a>
+              </div>
+            <?php else : ?>
+              <div class="d-grid col-5 col-lg-3 col-md-4 mx-auto m-3">
+                <a href="#" class="btn btn-secondary btn-sm" style="pointer-events: none;">
+                  Masukan ke wishlist
+                </a>
+              </div>
+            <?php endif ?>
+          </form>
         <?php endif ?>
        </div>
     </div>
   </div>
 
   <!-- Tampilan table label buku -->
-  <div class="card container my-4">
-    <div class="card-body">
-        <?= $this->include('halaman/nomorSeri/table.php') ?>
+  <?php if ($halaman === 'data') : ?>
+    <!-- Cuma bisa diliat dari halaman CRUD -->
+    <div class="card container my-4">
+      <div class="card-body">
+          <?= $this->include('halaman/nomorSeri/table.php') ?>
+      </div>
     </div>
-  </div>
+  <?php endif ?>
 
 <?= $this->endSection() ?>

@@ -2,6 +2,8 @@
 
 <?= $this->section('content') ?>
 
+  <?php $session = session() ?>
+
   <div class="row container-fluid">
     <!-- Sidebar -->
     <nav class="col-2 col-md-1 navbar mx-2 align-items-start">
@@ -18,14 +20,16 @@
           <div class="offcanvas-body">
             <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
               
-            <!-- Khusus Pegawai/Admin -->
-            <li class="nav-item">
-              <a class="nav-link" href="#panduan">Panduan Pegawai</a>
-            </li>
-              
               <?php if ($wishlist_list !== []) : 
                 $no = 1;  
               ?>
+                <?php if (esc($halaman) === 'pengguna') : ?>
+                  <!-- Khusus Pegawai/Admin -->
+                  <li class="nav-item">
+                    <a class="nav-link" href="#panduan">Panduan Pegawai</a>
+                  </li>
+                <?php endif ?>
+
                 <?php foreach ($wishlist_list as $wishlist_item) :
                 ?>
                   <li class="nav-item">
@@ -102,9 +106,15 @@
 
           <!-- Tombol -->
           <div class="row mt-3 justify-content-center">
+            <?php if (esc($halaman) === 'pengguna') : ?>
               <a href="<?= route_to('penggunaRincian', esc($pengguna['pengguna_username'])) ?>" class="btn btn-sm btn-primary me-2 mt-1" style="width: 88px;">
                 Kembali
               </a>
+            <?php else : ?>
+              <a href="<?= route_to('profilRincian', $session->get('username')) ?>" class="btn btn-sm btn-primary me-2 mt-1" style="width: 88px;">
+                Kembali
+              </a>
+            <?php endif ?>
           </div>
         </div>
       </div>
@@ -120,28 +130,33 @@
               <div class="col">
                 <h4>Wishlists</h4>
               </div>
-              <div class="col">
-                <a href="<?= route_to('wishlistTambahForm') ?>?u=<?= esc($pengguna['pengguna_username']) ?>" class="btn btn-primary float-end">Tambah WIshlist</a>
-              </div>
+              <?php if (esc($halaman) === 'pengguna') : ?>
+                <!-- Dari halaman CRUD bisa nambah wishlist pengguna -->
+                <div class="col">
+                  <a href="<?= route_to('wishlistTambahForm') ?>?u=<?= esc($pengguna['pengguna_username']) ?>" class="btn btn-primary float-end">Tambah WIshlist</a>
+                </div>
+              <?php endif ?>
             </div>
 
-            <!-- Khusus Pegawai/Admin -->
-            <div class="border border-primary-subtle rounded pt-2 px-2 mb-4">
-              <b>Untuk mengkonfirmasi pengajuan peminjaman buku:</b>
-              <ol>
-                <li>
-                  Ubah label buku sesuai buku yang akan dipinjam<br>
-                  <i>(Label di buku fisik. Ini web latihan jadi ga ada buku fisik. Cek <a href="<?= route_to('nomorSeriIndex') ?>">daftar label buku</a>)</i>
-                </li>
-                <li>
-                  Ubah status dari "wishlist" ke "konfirmasi". <br>
-                  <i>(Biarkan status "wishlist" bila buku tidak jadi dipinjam)</i>
-                </li>
-                <li>
-                  Bila semua buku yang akan dipinjam sudah dicek, tekan tombol "konfirmasi" di paling bawah.
-                </li>
-              </ol>
-            </div>
+            <?php if (esc($halaman) === 'pengguna') : ?>
+              <!-- Khusus Pegawai/Admin -->
+              <div class="border border-primary-subtle rounded pt-2 px-2 mb-4">
+                <b>Untuk mengkonfirmasi pengajuan peminjaman buku:</b>
+                <ol>
+                  <li>
+                    Ubah label buku sesuai buku yang akan dipinjam<br>
+                    <i>(Label di buku fisik. Ini web latihan jadi ga ada buku fisik. Cek <a href="<?= route_to('nomorSeriIndex') ?>">daftar label buku</a>)</i>
+                  </li>
+                  <li>
+                    Ubah status dari "wishlist" ke "konfirmasi". <br>
+                    <i>(Biarkan status "wishlist" bila buku tidak jadi dipinjam)</i>
+                  </li>
+                  <li>
+                    Bila semua buku yang akan dipinjam sudah dicek, tekan tombol "konfirmasi" di paling bawah.
+                  </li>
+                </ol>
+              </div>
+            <?php endif ?>
 
             <?= form_open(route_to('penggunaUbahWishlist', esc($pengguna['pengguna_username']))) ?>
               <input type="hidden" name="_method" value="PUT"/>
@@ -161,57 +176,70 @@
                       <img class="card-img sampul mt-1" src="<?= base_url('images/buku/') . esc($wishlist_item['buku_foto']) ?>" alt="<?= esc($wishlist_item['buku_foto']) ?>">
                     </div>
                   </div>
-
+                  
+                  <!-- Data buku -->
                   <div class="col">
-                    <!-- ID Wishlist -->
-                    <div class="form-floating mb-2">
-                      <input type="hidden" name="wishlist_id[]" id="wishlistJudulInput" autocomplete="off" list="wishlist_kode_list" class="form-control" placeholder="ID WIshlist" value="<?= old('wishlist_id') !== null ? old('wishlist_id') : esc($wishlist_item['wishlist_id']) ?>">
-                      <!-- <label for="wishlistJudulInput">ID WIshlist</label> -->
-                    </div>
-
-                    <!-- ID Pengguna -->
-                    <div class="form-floating mb-2">
-                      <input type="hidden" name="pengguna_id[]" id="wishlistJudulInput" autocomplete="off" list="wishlist_kode_list" class="form-control" placeholder="ID Pengguna" value="<?= old('pengguna_id') !== null ? old('pengguna_id') : esc($wishlist_item['pengguna_id']) ?>">
-                      <!-- <label for="wishlistJudulInput">ID Pengguna</label> -->
-                    </div>
                     <!-- Judul Buku -->
                     <div class="form-floating mb-2">
                       <input type="text" name="buku_judul[]" id="wishlistJudulInput" autocomplete="off" list="wishlist_kode_list" class="form-control" placeholder="Judul Buku" disabled value="<?= old('buku_judul') !== null ? old('buku_judul') : esc($wishlist_item['buku_judul']) ?>">
                       <label for="wishlistJudulInput">Judul Buku</label>
                     </div>
+
+                    <!-- Penulis Buku -->
+                    <div class="form-floating mb-2">
+                      <input type="text" name="buku_penulis[]" id="wishlistPenulisInput" autocomplete="off" list="wishlist_kode_list" class="form-control" placeholder="Penulis Buku" disabled value="<?= old('buku_penulis') !== null ? old('buku_penulis') : esc($wishlist_item['buku_penulis']) ?>">
+                      <label for="wishlistPenulisInput">Penulis Buku</label>
+                    </div>
                     
-                    <!-- Label Buku -->
-                    <div class="form-floating mb-2">
-                      <input type="text" name="seri_kode[]" id="wishlistKodeInput" autocomplete="off" list="wishlist_kode_list" class="form-control" placeholder="Label Buku" maxlength="14" required value="<?= old('seri_kode') !== null ? old('seri_kode') : esc($wishlist_item['seri_kode']) ?>">
-                      <label for="wishlistKodeInput">Label Buku</label>
-                    </div>
+                    <?php if (esc($halaman) === 'pengguna') : ?>
+                      <!-- Dari halaman CRUD -->
+                      <!-- ID Wishlist -->
+                      <div class="form-floating mb-2">
+                        <input type="hidden" name="wishlist_id[]" id="wishlistJudulInput" autocomplete="off" list="wishlist_kode_list" class="form-control" placeholder="ID WIshlist" value="<?= old('wishlist_id') !== null ? old('wishlist_id') : esc($wishlist_item['wishlist_id']) ?>">
+                        <!-- <label for="wishlistJudulInput">ID WIshlist</label> -->
+                      </div>
 
-                    <!-- Status -->
-                    <div class="form-floating mb-2">
-                      <?php
-                      $pilihan_status = [
-                        "wishlist"   => "Wishlist",
-                        "konfirmasi" => "Konfirmasi"
-                      ];
+                      <!-- ID Pengguna -->
+                      <div class="form-floating mb-2">
+                        <input type="hidden" name="pengguna_id[]" id="wishlistJudulInput" autocomplete="off" list="wishlist_kode_list" class="form-control" placeholder="ID Pengguna" value="<?= old('pengguna_id') !== null ? old('pengguna_id') : esc($wishlist_item['pengguna_id']) ?>">
+                        <!-- <label for="wishlistJudulInput">ID Pengguna</label> -->
+                      </div>
+                      
+                      <!-- Label Buku -->
+                      <div class="form-floating mb-2">
+                        <input type="text" name="seri_kode[]" id="wishlistKodeInput" autocomplete="off" list="wishlist_kode_list" class="form-control" placeholder="Label Buku" maxlength="14" required value="<?= old('seri_kode') !== null ? old('seri_kode') : esc($wishlist_item['seri_kode']) ?>">
+                        <label for="wishlistKodeInput">Label Buku</label>
+                      </div>
 
-                      $hiasan = [
-                        "class" => "form-control",
-                        "id"    => "floatingStatusInput"
-                      ];
+                      <!-- Status -->
+                      <div class="form-floating mb-2">
+                        <?php
+                        $pilihan_status = [
+                          "wishlist"   => "Wishlist",
+                          "konfirmasi" => "Konfirmasi"
+                        ];
 
-                      echo form_dropdown("status[]", $pilihan_status, old('status') !== null ? old('status') : esc($wishlist_item['status']), $hiasan);
-                      ?>
-                      <label for="floatingStatusInput">Status</label>
-                    </div>
+                        $hiasan = [
+                          "class" => "form-control",
+                          "id"    => "floatingStatusInput"
+                        ];
+
+                        echo form_dropdown("status[]", $pilihan_status, old('status') !== null ? old('status') : esc($wishlist_item['status']), $hiasan);
+                        ?>
+                        <label for="floatingStatusInput">Status</label>
+                      </div>
+                    <?php endif ?>
                   </div>
                 </div>
               <?php endforeach ?>
 
-              <div class="d-grid col-12 col-lg-5 col-md-7 mx-auto m-3">
-                <button type="submit" class="btn btn-primary btn-block">Konfirmasi Pengajuan</button>
-              </div>
-                  
-              <p class="text-center"><a href="<?= route_to('penggunaRincian', esc($pengguna['pengguna_username'])) ?>">Batal</a></p>
+              <?php if (esc($halaman) === 'pengguna') : ?>
+                <div class="d-grid col-12 col-lg-5 col-md-7 mx-auto m-3">
+                  <button type="submit" class="btn btn-primary btn-block">Konfirmasi Pengajuan</button>
+                </div>
+                    
+                <p class="text-center"><a href="<?= route_to('penggunaRincian', esc($pengguna['pengguna_username'])) ?>">Batal</a></p>
+              <?php endif ?>
             </form>
           <?php else : ?>
             <h4>Wishlists Kosong</h4>

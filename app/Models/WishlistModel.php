@@ -110,7 +110,7 @@ class WishlistModel extends Model
     {
         // Semua wishlist dari satu pengguna
 
-        return $this->select('wishlist.*, nomor_seri.seri_kode, nomor_seri.isbn, buku.buku_judul, buku.slug, buku.buku_foto, pengguna.pengguna_email, pengguna.pengguna_username')
+        return $this->select('wishlist.*, nomor_seri.seri_kode, nomor_seri.isbn, buku.buku_judul, buku.buku_penulis, buku.slug, buku.buku_foto, pengguna.pengguna_email, pengguna.pengguna_username')
                     ->join('nomor_seri', 'wishlist.seri_id = nomor_seri.seri_id', 'left')
                     ->join('buku', 'nomor_seri.isbn = buku.isbn', 'left')
                     ->join('pengguna', 'wishlist.pengguna_id = pengguna.pengguna_id', 'left')

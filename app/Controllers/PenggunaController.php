@@ -17,19 +17,29 @@ class PenggunaController extends BaseController
 {
 	public function index()
 	{
+		$session = session();
 		$penggunaModel = new PenggunaModel();
+		$cari = $this->request->getGet('cari');	// dari name-nya input type text
 		
 		$data = [
-			'title'     => 'Data Pengguna | Perpustakaan',
-			'penomoran' => 20	// samain sama paginate() di model getPengguna()
+			'title'				 => 'Data Pengguna | Perpustakaan',
+			'penomoran'		 => 20,	// samain sama paginate() di model getPengguna()
+			'cari_keyword' => $cari
 		];
 
-		$cari = $this->request->getGet('cari');	// dari name-nya input type text
-		if ($cari == null) {
-			$data['pengguna_list'] = $penggunaModel->getPengguna();
-			$data['pager']				 = $penggunaModel->pager;
+		if ($session->get('grup') === 'Admin') {
+			// Yang login admin, bisa liat semua pengguna
+			// Ini cara lama, di modelnya jg beda. Tapi sengaja ga diganti ke cara baru biar jadi referensi/tau pas awal belajar gimana
+			if ($cari == null) {
+				$data['pengguna_list'] = $penggunaModel->getPengguna();
+				$data['pager']				 = $penggunaModel->pager;
+			} else {
+				$data['pengguna_list'] = $penggunaModel->cariPengguna($cari);
+				$data['pager']				 = $penggunaModel->pager;
+			}
 		} else {
-			$data['pengguna_list'] = $penggunaModel->cariPengguna($cari);
+			// Yang login pegawai, cuma bisa liat anggota perpustakaan
+			$data['pengguna_list'] = $penggunaModel->getNonAdmin($cari);
 			$data['pager']				 = $penggunaModel->pager;
 		}
 
@@ -41,6 +51,17 @@ class PenggunaController extends BaseController
 	{
 		// Rincian pengguna & riwayat peminjaman
 
+		// Cek dateng dari halaman mana
+		$sessionUsername = session()->get('username');
+		$halaman = service('uri')->getSegment(1);
+
+		if ($halaman === 'profil' && $sessionUsername !== $pengguna_username) {
+			// Yang login ga sesuai sama username di url
+			// Cegah anggota perpustakaan (non admin/pegawai) liat profil anggota perpustakaan lain
+			return redirect()->route('profilRincian', [$sessionUsername]);
+		}
+
+		// Pencarian riwayat peminjaman
 		$cariKeyword = $this->request->getVar('cari');
 		$cariStatus = $this->request->getVar('status');
 
@@ -54,7 +75,8 @@ class PenggunaController extends BaseController
 			'title'         	=> 'Rincian Pengguna | Perpustakaan',
 			'penomoran'     	=> 20,	// samain sama paginate() di model getPeminjaman()
 			'cari_keyword'  	=> $cariKeyword,
-			'cari_status'   	=> $cariStatus
+			'cari_status'   	=> $cariStatus,
+			'halaman'					=> $halaman
 		];
 		// dd($data['pengguna']['pengguna_nama']);
 
@@ -67,19 +89,25 @@ class PenggunaController extends BaseController
 		return view('halaman/pengguna/rincian', $data);
 	}
 	
-	public function new()
+	public function new($halaman)
 	{
 		$grupModel = new GrupModel();
 		$data = [
 			'grup_list'  => $grupModel->getGrup(),
-			'title' => 'Pengguna Baru | Perpustakaan',
+			'title'			 => 'Pengguna Baru | Perpustakaan',
+			'judul_form' => 'Tambah Pengguna Baru',
+			'halaman'		 => $halaman
 		];
+
+		if ($halaman === 'anggota') {
+			$data['judul_form'] = 'Buat Akun Perpustakaan';
+		}
 
 		return view('halaman/pengguna/tambah', $data);
 	}
 
 	
-	public function create()
+	public function create($halaman)
 	{
 		$penggunaModel = new PenggunaModel();
 		$dataPost = $this->request->getPost();
@@ -92,13 +120,21 @@ class PenggunaController extends BaseController
 		if (password_verify($passUlang, $passHash)) {
 			$dataPost['pengguna_password'] = $passHash;
 		} else {
-			return redirect()->route('penggunaTambahForm')->with('error', 'Password tidak sesuai')->withInput();
+			if ($halaman === 'anggota') {
+				return redirect()->route('authDaftarForm', [$halaman])->with('error', 'Password tidak sesuai')->withInput();
+			} else {
+				return redirect()->route('penggunaTambahForm', [$halaman])->with('error', 'Password tidak sesuai')->withInput();
+			}
 		}
 
 		// Validasi file
 		$validationRule = validasiProfil();
 		if (! $this->validateData([], $validationRule)) {
-			return redirect()->route('penggunaTambahForm')->with('errors', $this->validator->getErrors())->withInput();
+			if ($halaman === 'anggota') {
+				return redirect()->route('authDaftarForm', [$halaman])->with('errors', $this->validator->getErrors())->withInput();
+			} else {
+				return redirect()->route('penggunaTambahForm', [$halaman])->with('errors', $this->validator->getErrors())->withInput();
+			}
 		}
 
 		// Cek upload foto
@@ -116,24 +152,41 @@ class PenggunaController extends BaseController
 				unlink($fotoBaru);
 			}
 
-			return redirect()->route('penggunaTambahForm')->with('errors', $penggunaModel->errors())->withInput();
+			if ($halaman === 'anggota') {
+				return redirect()->route('authDaftarForm', [$halaman])->with('errors', $penggunaModel->errors())->withInput();
+			} else {
+				return redirect()->route('penggunaTambahForm', [$halaman])->with('errors', $penggunaModel->errors())->withInput();
+			}
 		}
 
-		// Nanti di controller buku pake validasi di luar query save/update aja biar ga banyak ngulang ngecek foto.
-		// Eh tapi nanti kalo gagal masukin ke database selain gara2 validasi, foto tetep pindah ke folder sih 
-
-		return redirect()->route('penggunaIndex')->with('message', 'Pengguna berhasil ditambahkan!');
+		if ($halaman === 'anggota') {
+			return redirect()->route('authLoginForm')->with('message', 'Akun berhasil dibuat!');
+		} else {
+			return redirect()->route('penggunaIndex')->with('message', 'Pengguna berhasil ditambahkan!');
+		}
 	}
 
 	
 	public function edit($pengguna_username = null)
 	{
+		// Halaman ubah data pengguna
+		$sessionUsername = session()->get('username');
+
+		// Cek dateng dari halaman mana
+		$halaman = service('uri')->getSegment(1);
+
+		if ($halaman === 'profil' && $sessionUsername !== $pengguna_username) {
+			// Yang login ga sesuai sama username di url
+			// Cegah anggota perpustakaan (non admin/pegawai) liat profil anggota perpustakaan lain
+			return redirect()->route('profilUbahForm', [$sessionUsername]);
+		}
 		$penggunaModel = new PenggunaModel();
 		$grupModel = new GrupModel();
 		$data = [
 			'grup_list' => $grupModel->getGrup(),
 			'pengguna'  =>$penggunaModel->getPengguna($pengguna_username),
 			'title'     => 'Ubah Data Pengguna | Perpustakaan',
+			'halaman'		=> $halaman
 		];
 
 		if ($data['pengguna'] === null) {
@@ -146,6 +199,11 @@ class PenggunaController extends BaseController
 	
 	public function update($pengguna_id = null)
 	{
+		// Proses ubah data pengguna
+		$sessionUsername = session()->get('username');
+
+		// Cek dateng dari halaman mana
+		$halaman = service('uri')->getSegment(1);
 		
 		$penggunaModel = new PenggunaModel();
 		$pengguna = $penggunaModel->find($pengguna_id);
@@ -164,8 +222,13 @@ class PenggunaController extends BaseController
 				? "" : 'pengguna_username' => $dataPost['pengguna_username'],
 
 			'pengguna_nama'     => formatJudul($dataPost['pengguna_nama']),
-			'grup_id'           => $dataPost['grup_id']
 		];
+
+		if ($halaman === 'pengguna') {
+			// Dari halaman admin CRUD, bisa ubah grup level & status
+			$data['grup_id'] = $dataPost['grup_id'];
+			$data['pengguna_status'] = $dataPost['pengguna_status'];
+		}
 
 		// Validasi password
 		if ($password != "") {
@@ -189,7 +252,7 @@ class PenggunaController extends BaseController
 		// Isi database pake validasi yang di model
 		if ($penggunaModel->update($pengguna_id, $data) === false) {
 			// Data gagal masuk ke database tapi foto udah masuk ke folder duluan
-			if ($foto != "") {
+			if ($foto !== "") {
 				$fotoBaru = ROOTPATH . 'public/images/profil/' . $data['pengguna_foto'];
 				unlink($fotoBaru);
 			}
@@ -201,16 +264,31 @@ class PenggunaController extends BaseController
 		if ($foto != "") {
 			// Ngehapus foto lama, kalo ada
 			$fotoLama = ROOTPATH . 'public/images/profil/' . $pengguna['pengguna_foto'];
-			if (file_exists($fotoLama)) {
+			if (is_file($fotoLama)) {
 				unlink($fotoLama);
 				// Katanya ada juga helper dari CI buat ngehapus. Tapi biar ga ngeload helper, pake bawaan PHPnya aja
 			}
 		}
-
-
 		// Banyak ngecek foto gitu gara2 validasi data lainnya baru dicek pas jalanin model-update()
 
-		return redirect()->route('penggunaIndex')->with('message', 'Pengguna berhasil ditambahkan!');
+		if ($halaman === 'profil') {
+			// Dari halaman profil balik ke halaman profil
+			if (isset($data['pengguna_username'])) {
+				// Kalo data username diubah, ubah juga username di session
+				session()->set(['username' => $dataPost['pengguna_username']]);
+				$sessionUsername = session()->get('username');
+			}
+
+			return redirect()->route('profilRincian', [$sessionUsername])->with('message', 'Data profil berhasil diubah!');
+		} else {
+			// Dari halaman CRUD balik ke halaman CRUD
+			if ($pengguna['pengguna_username'] === $sessionUsername && isset($data['pengguna_username'])) {
+				// Kalo admin/pegawai ngubah datanya sendiri dari halaman CRUD
+				session()->set(['username' => $dataPost['pengguna_username']]);
+			}
+
+			return redirect()->route('penggunaIndex')->with('message', 'Data pengguna berhasil diubah!');
+		}
 	}
 
 	
@@ -242,14 +320,26 @@ class PenggunaController extends BaseController
 	{
 		// Menampilkan daftar wishlist pengguna
 
+		// Cek dateng dari halaman mana
+		$sessionUsername = session()->get('username');
+		$halaman = service('uri')->getSegment(1);
+
+		if ($halaman === 'profil' && $sessionUsername !== $pengguna_username) {
+			// Yang login ga sesuai sama username di url
+			// Cegah anggota perpustakaan (non admin/pegawai) liat profil anggota perpustakaan lain
+			return redirect()->route('profilWishlist', [$sessionUsername]);
+		}
+
 		$penggunaModel = new PenggunaModel();
 		$wishlistModel = new WishlistModel();
 		$data = [
 			'pengguna' => $penggunaModel->getPengguna($pengguna_username),
-			'title'    => "Wishlist Anggota | Perpustakaan"
+			'title'    => "Wishlist Anggota | Perpustakaan",
+			'halaman'	 => $halaman
 		];
 
 		if ($data['pengguna'] === null) {
+			// Dari halaman CRUD kalo admin/pegawai coba2 masukin username langsung di url tapi usernamenya ga ada
 			throw new PageNotFoundException('Tidak dapat menemukan data pengguna: ' . $pengguna_username);
 		}
 
@@ -352,5 +442,39 @@ class PenggunaController extends BaseController
 				$db->transRollback();
 				return redirect()->back()->with('errors', $e->getMessage());
 		}
+	}
+
+	public function peminjamanRinci($pengguna_username, $peminjaman_id)
+	{
+		// Menampilkan rincian peminjaman
+		// $pengguna_username ga kepake. Cuma biar di route tampilan linknya lebih jelas
+		// profil/username/peminjaman/peminjaman_id
+		
+
+		// Cek dateng dari halaman mana
+		$sessionUsername = session()->get('username');
+		$halaman = service('uri')->getSegment(1);
+		$halamanUsername = service('uri')->getSegment(2);
+
+		if ($halaman === 'profil' && $sessionUsername !== $halamanUsername) {
+			// Yang login ga sesuai sama username di url
+			// Cegah anggota perpustakaan (non admin/pegawai) liat profil anggota perpustakaan lain
+			return redirect()->route('profilPeminjamanRinci', [$sessionUsername]);
+		}
+
+		$peminjamanModel = new PeminjamanModel();
+		$data = [
+			'peminjaman' => $peminjamanModel->getSatuPeminjaman($peminjaman_id),
+			'title'      => 'Rincian Peminjaman | Perpustakaan',
+			'halaman'		 => $halaman
+		];
+
+		if ($data['peminjaman'] === null) {
+			throw new PageNotFoundException('Tidak dapat menemukan data peminjaman: ' . $peminjaman_id);
+		}
+
+		$data['title'] = "Peminjaman " . $data['peminjaman']['peminjaman_kode'] . " | Perpustakaan";
+
+		return view('halaman/peminjaman/rincian', $data);
 	}
 }

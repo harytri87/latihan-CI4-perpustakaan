@@ -2,6 +2,8 @@
 
 <?= $this->section('content') ?>
 
+  <?php $session = session(); ?>
+
   <div class="card container my-4">
     <div class="card-body">
       <?= $this->include('layout/inc/alert.php') ?>
@@ -116,7 +118,8 @@
                   </tr>
 
                   <!-- Status Pengembalian -->
-                  <?php if (esc($peminjaman['pengembalian_tanggal']) === null) : ?>
+                  <?php if (!isset($halaman) && esc($peminjaman['pengembalian_tanggal']) === null) : ?>
+                    <!-- Cuma bisa diliat dari halaman CRUD buat konfirmasi status pengembalian kalo belum dikembaliin -->
                     <tr>
                       <td class="align-middle">Status Pengembalian</td>
                       <td class="align-middle text-center">:</td>
@@ -161,23 +164,27 @@
             </div>
           </div>
 
-          <!-- Tombol -->
-          <div class="d-grid col-12 col-lg-5 col-md-7 mx-auto m-3">
-            <?php if (esc($peminjaman['pengembalian_tanggal']) === null) : ?>
-              <i class="text-center">Pastikan label buku, tanggal pengembalian dan status pengembalian sudah sesuai</i>
-              <button type="submit" class="btn btn-primary my-3">Konfirmasi Pengembalian</button>
-            <?php else : ?>
-              <a class="btn btn-primary my-3" href="<?= route_to('peminjamanUbahForm', esc($peminjaman['peminjaman_id'])) ?>">Ubah Data</a>
-            <?php endif ?>
+          <?php if ($session->get('grup') !== 'Anggota') : ?>
+            <!-- Tombol -->
+            <div class="d-grid col-12 col-lg-5 col-md-7 mx-auto m-3">
+              <?php if (esc($peminjaman['pengembalian_tanggal']) === null) : ?>
+                <i class="text-center">Pastikan label buku, tanggal pengembalian dan status pengembalian sudah sesuai</i>
+                <button type="submit" class="btn btn-primary my-3">Konfirmasi Pengembalian</button>
+              <?php else : ?>
+                <a class="btn btn-primary my-3" href="<?= route_to('peminjamanUbahForm', esc($peminjaman['peminjaman_id'])) ?>">Ubah Data</a>
+              <?php endif ?>
 
-            <?php if (isset($username)) : ?>
-              <p class="text-center"><a href="<?= route_to('penggunaRincian', esc($username)) ?>">Kembali</a></p>
-            <?php else : ?>
-              <p class="text-center"><a href="<?= route_to('peminjamanIndex') ?>">Kembali</a></p>
-            <?php endif ?>
-          </div>
+              <?php if (isset($username)) : ?>
+                <p class="text-center"><a href="<?= route_to('penggunaRincian', esc($username)) ?>">Kembali</a></p>
+              <?php else : ?>
+                <p class="text-center"><a href="<?= route_to('peminjamanIndex') ?>">Kembali</a></p>
+              <?php endif ?>
+            </div>
 
-          <i class="small">Kalo buku belum dikembalikan, bisa ngubah data peminjaman. Tapi di halaman ini buat konfirmasi pengembalian buku aja. Kalo di halaman ubah itu buat ubah semua data peminjaman.</i>
+            <i class="small">Kalo buku belum dikembalikan, bisa ngubah data peminjaman. Tapi di halaman ini buat konfirmasi pengembalian buku aja. Kalo di halaman ubah itu buat ubah semua data peminjaman.</i>
+          <?php else : ?>
+            <p class="text-center"><a href="<?= route_to('profilRincian', $session->get('username')) ?>">Kembali</a></p>
+          <?php endif ?>
         </div>
 
       </form>

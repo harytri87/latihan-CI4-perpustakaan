@@ -5,13 +5,25 @@
 <div class="container d-flex justify-content-center p-5">
   <div class="card col-12">
     <div class="card-body">
-      <h5 class="card-title mb-5">Tambah Pengguna Baru</h5>
+      <h5 class="card-title mb-4"><?= esc($judul_form) ?></h5>
 
       <?= $this->include('layout/inc/alert.php') ?>
 
+      <?php 
+        $session = session(); 
+      ?>
+
       <!-- form_open() udah sekalian sama csrf kalo di Filters.php csrf-nya di uncomment-->
       <?php //dd(form_open_multipart(route_to('penggunaTambahAction'))) ?>
-      <?= form_open_multipart(route_to('penggunaTambahAction')) ?>
+
+      <?php if (esc($halaman) === 'anggota') : ?>
+        <!-- Dari halaman daftar -->
+        <?= form_open_multipart(route_to('authDaftarAction', esc($halaman))) ?>
+      <?php else : ?>
+        <!-- Dari halaman CRUD -->
+        <?= form_open_multipart(route_to('penggunaTambahAction', esc($halaman))) ?>
+      <?php endif ?>
+
         <!-- Nama -->
         <div class="form-floating mb-2">
           <input type="text" name="pengguna_nama" id="floatingNamaInput" class="form-control" placeholder="Nama" required maxlength="100" value="<?= set_value('pengguna_nama') ?>">
@@ -43,16 +55,25 @@
         </div>
         
         <!-- Level -->
-        <div class="form-floating mb-2">
-          <select name="grup_id" id="floatingGrupInput" class="form-control">
-            <?php foreach ($grup_list as $grup_item) : ?>
-              <option value="<?= (int)esc($grup_item['grup_id']) ?>" <?= set_select('grup_id', esc($grup_item['grup_id'])) ?>>
-                <?= esc($grup_item['grup_nama']) ?>
-              </option>
-            <?php endforeach ?>
-          </select>
-          <label for="floatingGrupInput">Grup Level</label>
-        </div>
+        <?php if ($session->get('grup') === 'Admin') : ?>
+          <!-- Admin bisa pilih semua grup -->
+          <div class="form-floating mb-2">
+            <select name="grup_id" id="floatingGrupInput" class="form-control">
+              <?php foreach ($grup_list as $grup_item) : ?>
+                <option value="<?= (int)esc($grup_item['grup_id']) ?>" <?= set_select('grup_id', esc($grup_item['grup_id'])) ?>>
+                  <?= esc($grup_item['grup_nama']) ?>
+                </option>
+              <?php endforeach ?>
+            </select>
+            <label for="floatingGrupInput">Grup Level</label>
+          </div>
+        <?php else : ?>
+          <!-- Non admin default ngisi level grup anggota -->
+          <div class="form-floating mb-2">
+            <input type="hidden" name="grup_id" id="floatingGrupInput" class="form-control" placeholder="Level Grup" value="3"> <!-- grup_id buat anggota di table grup -->
+            <!-- <label for="floatingGrupInput">Level Grup</label> -->
+          </div>
+        <?php endif ?>
         
         <!-- Foto Profil -->
         <div class="form-floating mb-2">
@@ -70,8 +91,14 @@
         <div class="d-grid col-12 col-lg-5 col-md-7 mx-auto m-3">
           <button type="submit" class="btn btn-primary btn-block">Tambahkan</button>
         </div>
-            
+        
+        <?php if (esc($halaman) === 'anggota') : ?>
+          <!-- Dari halaman daftar -->
+        <p class="text-center"><a href="<?= route_to('authLoginForm') ?>">Batal</a></p>
+        <?php else : ?>
+          <!-- Dari halaman CRUD -->
         <p class="text-center"><a href="<?= route_to('penggunaIndex') ?>">Batal</a></p>
+        <?php endif ?>
       </form>
     </div>
   </div>

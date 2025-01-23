@@ -2,6 +2,8 @@
 
 <?= $this->section('content') ?>
 
+  <?php $session = session(); ?>
+
   <div class="card container my-4">
     <div class="card-body">
       <?= $this->include('layout/inc/alert.php') ?>
@@ -61,17 +63,24 @@
 
       <!-- Tombol -->
       <div class="row mt-3 justify-content-center">
-          <a href="#" class="btn btn-sm btn-primary me-2 mt-1" style="width: 88px;">
+        <?php if (esc($halaman) === 'profil') : ?>
+          <a href="<?= route_to('profilUbahForm', $session->get('username')) ?>" class="btn btn-sm btn-primary me-2 mt-1" style="width: 88px;">
             Ubah Data
-            <!-- Bisa buat semua, ngelink ke CRUD (ubah) pengguna tapi kalo bukan admin, ga bisa ngubah status sama grup level -->
           </a>
+
+          <a href="<?= route_to('profilWishlist', $session->get('username')) ?>" class="btn btn-sm btn-primary me-2 mt-1" style="width: 72px;">
+            Wishlist
+          </a>
+        <?php else : ?>
           <a href="<?= route_to('penggunaWishlist', esc($pengguna['pengguna_username'])) ?>" class="btn btn-sm btn-primary me-2 mt-1" style="width: 72px;">
             Wishlist
           </a>
+        <?php endif ?>
       </div>
     </div>
   </div>
 
+  <!-- Riwayat Peminjaman -->
   <div class="card container my-4">
     <div class="card-body">
       
@@ -108,7 +117,9 @@
           </form>
         </div>
         <div class="col">
-          <a href="<?= route_to('peminjamanTambahForm') ?>?u=<?= esc($pengguna['pengguna_username']) ?>" class="btn btn-primary float-end">Tambah Peminjaman</a>
+          <?php if (esc($halaman) === 'pengguna') : ?>
+            <a href="<?= route_to('peminjamanTambahForm') ?>?u=<?= esc($pengguna['pengguna_username']) ?>" class="btn btn-primary float-end">Tambah Peminjaman</a>
+          <?php endif ?>
         </div>
       </div>
 
@@ -144,7 +155,13 @@
                       $sisaHari ?>
                   </td>
                   <td class="text-center">
-                  	<a href="<?= route_to('peminjamanRincian', esc($peminjaman_item['peminjaman_id'])) ?>?u=<?= esc($pengguna['pengguna_username']) ?>" class="btn btn-primary btn-sm">Rincian</a>
+                    <?php if (esc($halaman) === 'profil') : ?>
+                      <!-- Dari halaman profil -->
+                      <a href="<?= route_to('profilPeminjamanRinci', $session->get('username'), esc($peminjaman_item['peminjaman_id'])) ?>" class="btn btn-primary btn-sm">Rincian</a>
+                    <?php else : ?>
+                      <!-- Dari halaman CRUD -->
+                  	  <a href="<?= route_to('peminjamanRincian', esc($peminjaman_item['peminjaman_id'])) ?>?u=<?= esc($pengguna['pengguna_username']) ?>" class="btn btn-primary btn-sm">Rincian</a>
+                    <?php endif ?>
                   </td>
                 </tr>
 
@@ -161,7 +178,7 @@
           </div>
 
         <?php else: ?>
-						<h4>Data peminjaman tidak ditemukan</h4>
+						<h4>Data peminjaman tidak ditemukan/kosong</h4>
         <?php endif ?>
       </div>
     

@@ -8,6 +8,7 @@ use CodeIgniter\Exceptions\PageNotFoundException;
 use App\Models\BukuModel;
 use App\Models\KategoriModel;
 use App\Models\NomorSeriModel;
+use App\Models\WishlistModel;
 
 class BukuController extends BaseController
 {
@@ -34,22 +35,25 @@ class BukuController extends BaseController
     return view('halaman/buku/index', $data);
   }
 
-
   public function show($slug = null)
   {
     // Menampilkan rincian satu buku
 
+    $session = session();
+		$halaman = service('uri')->getSegment(1);
     $bukuModel = new BukuModel();
     $nomorSeriModel = new NomorSeriModel();
+    $wishlistModel = new WishlistModel();
 		$buku = $bukuModel->satuBuku($slug);
 		$cariStatus = $this->request->getVar('status');
 
 		$data = [
-			'buku'            => $buku,
-			'title'           => 'Rincian Buku | Perpustakaan',
-			'penomoran'       => 20,	// samain sama paginate() di getNomorSeri()
-			'cari_status'     => $cariStatus,
-			'aksi'						=> 'bukuController',	// Tanda manggil tampilan tablenya dari controller ini
+			'buku'        => $buku,
+			'title'       => 'Rincian Buku | Perpustakaan',
+			'penomoran'   => 20,	// samain sama paginate() di getNomorSeri()
+			'cari_status' => $cariStatus,
+			'aksi'        => 'bukuController',	// Tanda manggil tampilan tablenya dari controller ini
+      'halaman'     => $halaman
 		];
 
     // Jika data tidak ditemukan
@@ -61,9 +65,19 @@ class BukuController extends BaseController
     $data['nomor_seri_list'] = $nomorSeriModel->getNomorSeri($buku['isbn'], $cariStatus)->paginate(20);
     $data['pager'] = $nomorSeriModel->pager;
 
+    // Buat tombol tambah wishlist
+    if ($halaman === 'buku') {
+      // Cek wishlist pengguna yang login
+      $cekDuplikat = $wishlistModel->cekDuplikat($session->get('id'), $buku['isbn']);
+      if ($cekDuplikat > 0) {
+        $data['boleh_wishlist'] = false;
+      } else {
+        $data['boleh_wishlist'] = true;
+      }
+    }
+
 		return view('halaman/buku/rincian', $data);
   }
-
 
   public function new()
   {
@@ -77,7 +91,6 @@ class BukuController extends BaseController
 
     return view('halaman/buku/tambah', $data);
   }
-
 
   public function create()
   {

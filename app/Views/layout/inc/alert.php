@@ -31,6 +31,16 @@
   </div>
 <?php endif ?>
 
+<!-- Warning -->
+<?php if (session()->getFlashdata('warning') !== null) : ?>
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      <div class="alert-body">
+        <?= session()->getFlashdata('warning') ?>
+      </div>
+  </div>
+<?php endif ?>
+
 <!--
 	yang di atas kalo controllernya return redirect()
 	yang di bawah contoh Kalo di controllernya return view

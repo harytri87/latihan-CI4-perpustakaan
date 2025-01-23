@@ -10,14 +10,14 @@ function validasiProfil()
       'rules' => [
         'is_image[pengguna_foto]',
         'mime_in[pengguna_foto,image/jpg,image/jpeg,image/png,image/webp]',
-        'max_size[pengguna_foto,400]',
-        'max_dims[pengguna_foto,1080,1080]',
+        'max_size[pengguna_foto,2000]',
+        'max_dims[pengguna_foto,2700,2780]',
       ],
       'errors' => [
         'is_image'    => 'Harap pilih gambar foto profil',
         'mime_in'     => 'File gambar tidak didukung',
-        'max_size'    => 'File gambar maksimal 400 KB',
-        'max_dims'    => 'Resolusi gambar maksimal 1080x1080 pixel'
+        'max_size'    => 'File gambar maksimal 2 MB',
+        'max_dims'    => 'Resolusi gambar maksimal 2700x2780 pixel'
       ]
     ],
   ];

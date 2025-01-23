@@ -2,8 +2,6 @@
 
 <?= $this->section('content') ?>
 
-  <?= $this->include('layout/inc/alert.php') ?>
-
   <div class="card container my-4">
     <div class="card-body">
       
@@ -15,12 +13,12 @@
         </div>
         <div class="col-9">
           <form action="" method="get" class="d-flex" role="search">
-              <input class="form-control me-2" type="search" name="cari" placeholder="Cari nama / email pengguna" aria-label="Cari pengguna">
+              <input class="form-control me-2" type="search" name="cari" placeholder="Cari nama / email pengguna" aria-label="Cari pengguna" value="<?= esc($cari_keyword) ?>">
               <button class="btn btn-primary" type="submit">Cari</button>
           </form>
         </div>
         <div class="col">
-          <a href="<?= route_to('penggunaTambahForm') ?>" class="btn btn-primary float-end">Tambah</a>
+          <a href="<?= route_to('penggunaTambahForm', 'data') ?>" class="btn btn-primary float-end">Tambah</a>
         </div>
       </div>
 
