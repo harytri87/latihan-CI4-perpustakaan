@@ -5,7 +5,6 @@
 [Bootstrap 5.3.3](https://getbootstrap.com/docs/5.3/getting-started/download/) *(udh di-download, bisa offline)*
 
 ### Penjelasan web ini
-(Web belum beres)
 Pengguna dapat melihat semua buku yang ada di perpustakaan lalu menambahkannya ke wishlist. Saat pengguna / anggota perpustakaan datang ke perpustakaan ingin meminjam buku, pegawai perpustakaan mengecek wishlist anggota tersebut lalu mengkonfirmasi peminjaman bukunya.
 
 Bila anggota perpustakaan ingin meminjam buku tetapi tidak tahu tentang web perpustakaan ini, maka pegawai akan mengecek apakah anggota tersebut sudah terdaftar. Jika sudah terdaftar maka bisa langsung masukan data peminjaman melalui halaman admin.
