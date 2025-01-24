@@ -5,7 +5,7 @@
 <div class="container d-flex justify-content-center p-5">
   <div class="card col-12">
     <div class="card-body">
-      <h5 class="card-title mb-5">Tambah Data Peminjaman Baru</h5>
+      <h5 class="card-title mb-3">Tambah Data Peminjaman Baru</h5>
 
       <?= $this->include('layout/inc/alert.php') ?>
 
@@ -106,9 +106,9 @@
 
         <div class="d-grid col-12 col-lg-5 col-md-7 mx-auto m-3">
           <button type="submit" class="btn btn-primary btn-block">Tambahkan</button>
-
-          <p class="text-center"><a href="<?= route_to('peminjamanIndex') ?>">Batal</a></p>
         </div>
+
+        <p class="text-center"><a href="<?= route_to('peminjamanIndex') ?>">Batal</a></p>
         
       </form>
     </div>

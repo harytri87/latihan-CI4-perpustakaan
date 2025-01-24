@@ -153,7 +153,7 @@
           </div>
 
           <!-- Tombol -->
-          <div class="d-grid col-12 col-lg-5 col-md-7 mx-auto m-3">
+          <div class="d-grid col-12 col-lg-5 col-md-7 mx-auto">
             <i class="text-center">Pastikan label buku dan data lainnya sudah sesuai</i>
             <i class="text-center">*Bila kolom denda dan keterangan kosong, maka akan diisi otomatis.</i>
 

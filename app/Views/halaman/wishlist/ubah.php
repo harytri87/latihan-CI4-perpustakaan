@@ -5,7 +5,7 @@
 <div class="container d-flex justify-content-center p-5">
   <div class="card col-12">
     <div class="card-body">
-      <h5 class="card-title mb-5">Ubah Data Wishlist</h5>
+      <h5 class="card-title mb-3">Ubah Data Wishlist</h5>
 
       <?= $this->include('layout/inc/alert.php') ?>
 

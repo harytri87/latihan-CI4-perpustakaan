@@ -27,73 +27,69 @@
 
         <!-- Rincian buku -->
         <div class="col-md-8 mb-3">
-          <div class="row mb-2 pt-3">
-            <div class="col-lg-2 col-3">
-              ISBN
-            </div>
-            <div class="col-lg-10 col-9">
-              : <?= esc($buku['isbn']) ?>
-            </div>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <tbody>
+                <!-- ISBN -->
+                <tr>
+                  <td>ISBN</td>
+                  <td>:</td>
+                  <td><?= esc($buku['isbn']) ?></td>
+                </tr>
+
+                <!-- Judul -->
+                <tr>
+                  <td>Judul</td>
+                  <td>:</td>
+                  <td><?= esc($buku['buku_judul']) ?></td>
+                </tr>
+                
+                <!-- Penulis -->
+                <tr>
+                  <td>Penulis</td>
+                  <td>:</td>
+                  <td><?= esc($buku['buku_penulis']) ?></td>
+                </tr>
+                
+                <!-- Terbit -->
+                <tr>
+                  <td>Terbit</td>
+                  <td>:</td>
+                  <td><?= esc($buku['buku_terbit']) ?></td>
+                </tr>
+                
+                <!-- Kategori -->
+                <tr>
+                  <td>Kategori</td>
+                  <td>:</td>
+                  <td><?= esc($buku['kategori_nama']) ?></td>
+                </tr>
+                
+                <!-- Sinopsis -->
+                <tr>
+                  <td>Sinopsis</td>
+                  <td>:</td>
+                  <td><?= esc($buku['buku_sinopsis']) ?></td>
+                </tr>
+                
+                <!-- Jumlah tersedia -->
+                <tr>
+                  <td>Jumlah</td>
+                  <td>:</td>
+                  <td><?= esc($jumlah_tersedia) ?> buku tersedia</td>
+                </tr>
+                
+                <!-- Jumlah total -->
+                <?php if ($halaman === 'data') : ?>
+                  <tr>
+                    <td>Jumlah</td>
+                    <td>:</td>
+                    <td><?= esc($buku['jumlah_buku']) ?> buku total</td>
+                  </tr>
+                <?php endif ?>
+              </tbody>
+            </table>
           </div>
-          <div class="row mb-2">
-            <div class="col-lg-2 col-3">
-              Judul
-            </div>
-            <div class="col-lg-10 col-9">
-              : <?= esc($buku['buku_judul']) ?>
-            </div>
-          </div>
-          <div class="row mb-2">
-            <div class="col-lg-2 col-3">
-              Penulis
-            </div>
-            <div class="col-lg-10 col-9">
-              : <?= esc($buku['buku_penulis']) ?>
-            </div>
-          </div>
-          <div class="row mb-2">
-            <div class="col-lg-2 col-3">
-              Terbit
-            </div>
-            <div class="col-lg-10 col-9">
-              : <?= esc($buku['buku_terbit']) ?>
-            </div>
-          </div>
-          <div class="row mb-2">
-            <div class="col-lg-2 col-3">
-              Kategori
-            </div>
-            <div class="col-lg-10 col-9">
-              : <?= esc($buku['kategori_nama']) ?>
-            </div>
-          </div>
-          <div class="row mb-2">
-            <div class="col-lg-2 col-3">
-              Sinopsis
-            </div>
-            <div class="col-lg-10 col-9">
-              : <?= esc($buku['buku_sinopsis']) ?>
-            </div>
-          </div>
-          <div class="row mb-2">
-            <div class="col-lg-2 col-3">
-              Jumlah
-            </div>
-            <div class="col-lg-10 col-9">
-              : <?= esc($jumlah_tersedia) ?> buku tersedia
-            </div>
-          </div>
-          
-          <?php if ($halaman === 'data') : ?>
-            <div class="row mb-2">
-              <div class="col-lg-2 col-3">
-                Jumlah
-              </div>
-              <div class="col-lg-10 col-9">
-                : <?= esc($buku['jumlah_buku']) ?> buku total
-              </div>
-            </div>
-          <?php endif ?>
         </div>
       </div>
 
@@ -124,17 +120,17 @@
 
             <!-- Tombol -->
             <?php if ($jumlah_tersedia > 0 && $boleh_wishlist === true) : ?>
-              <div class="d-grid col-5 col-lg-3 col-md-4 mx-auto m-3">
+              <div class="d-grid col-5 col-lg-3 col-md-4 mx-auto">
                 <button type="submit" class="btn btn-primary btn-sm">Masukan ke wishlist</button>
               </div>
             <?php elseif ($boleh_wishlist === false) : ?>
-              <div class="d-grid col-5 col-lg-3 col-md-4 mx-auto m-3">
+              <div class="d-grid col-5 col-lg-3 col-md-4 mx-auto">
                 <a href="#" class="btn btn-secondary btn-sm" style="pointer-events: none;">
                   Sudah ada di wishlist
                 </a>
               </div>
             <?php else : ?>
-              <div class="d-grid col-5 col-lg-3 col-md-4 mx-auto m-3">
+              <div class="d-grid col-5 col-lg-3 col-md-4 mx-auto">
                 <a href="#" class="btn btn-secondary btn-sm" style="pointer-events: none;">
                   Masukan ke wishlist
                 </a>
