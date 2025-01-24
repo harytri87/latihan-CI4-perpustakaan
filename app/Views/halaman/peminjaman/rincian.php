@@ -2,7 +2,10 @@
 
 <?= $this->section('content') ?>
 
-  <?php $session = session(); ?>
+  <?php
+    $session = session();
+		$halaman = service('uri')->getSegment(1);
+  ?>
 
   <div class="card container my-4">
     <div class="card-body">
@@ -118,7 +121,7 @@
                   </tr>
 
                   <!-- Status Pengembalian -->
-                  <?php if (!isset($halaman) && esc($peminjaman['pengembalian_tanggal']) === null) : ?>
+                  <?php if ($halaman !== 'profil' && esc($peminjaman['pengembalian_tanggal']) === null) : ?>
                     <!-- Cuma bisa diliat dari halaman CRUD buat konfirmasi status pengembalian kalo belum dikembaliin -->
                     <tr>
                       <td class="align-middle">Status Pengembalian</td>
@@ -164,13 +167,15 @@
             </div>
           </div>
 
-          <?php if ($session->get('grup') !== 'Anggota') : ?>
+          <?php if ($session->get('grup') !== 'Anggota' && $halaman !== 'profil') : ?>
             <!-- Tombol -->
             <div class="d-grid col-12 col-lg-5 col-md-7 mx-auto m-3">
               <?php if (esc($peminjaman['pengembalian_tanggal']) === null) : ?>
                 <i class="text-center">Pastikan label buku, tanggal pengembalian dan status pengembalian sudah sesuai</i>
                 <button type="submit" class="btn btn-primary my-3">Konfirmasi Pengembalian</button>
               <?php else : ?>
+                <a class="btn btn-primary" href="<?= route_to('peminjamanCetakStruk', esc($peminjaman['peminjaman_id'])) ?>" target="_blank">Print Struk</a>
+
                 <a class="btn btn-primary my-3" href="<?= route_to('peminjamanUbahForm', esc($peminjaman['peminjaman_id'])) ?>">Ubah Data</a>
               <?php endif ?>
 

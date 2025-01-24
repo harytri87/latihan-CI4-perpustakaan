@@ -104,4 +104,5 @@ $routes->group('peminjaman', ['filter' => 'grup:Admin, Pegawai'], function($rout
     $routes->get('(:segment)/ubah', 'PeminjamanController::edit/$1', ['as' => 'peminjamanUbahForm']);
     $routes->put('(:num)', 'PeminjamanController::update/$1', ['as' => 'peminjamanUbahAction']);
     $routes->delete('(:num)', 'PeminjamanController::delete/$1', ['as' => 'peminjamanHapus']);
+    $routes->get('struk/(:segment)', 'LaporanController::strukPeminjaman/$1', ['as' => 'peminjamanCetakStruk']);
 });

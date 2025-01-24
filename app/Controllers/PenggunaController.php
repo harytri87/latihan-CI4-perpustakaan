@@ -388,11 +388,17 @@ class PenggunaController extends BaseController
 
 			// Cek ketersediaan buku
 			if ($seri === null) {
-				$notif[0] = 'Label buku tidak sesuai';
+				$notif[0] = 'Label buku tidak sesuai.';
 			} else {
 				if ($seri['status_buku'] !== 'tersedia') {
-					$notif[0] = 'Label buku sedang tidak tersedia';
+					$notif[0] = 'Label buku sedang tidak tersedia.';
 				}
+			}
+
+			// Cek buku yang sama udah ada di peminjamannya belum
+			$cekDuplikat = $peminjamanModel->cekDuplikat($item['pengguna_id'], $seri['isbn']);
+			if ($cekDuplikat > 0) {
+				$notif[1] = 'Setiap anggota hanya dapat meminjam satu buku yang sama. Sedang meminjam: ' . $seri['buku_judul'];
 			}
 
 			if ($notif !== []) {
@@ -417,6 +423,12 @@ class PenggunaController extends BaseController
 		}
 
 		$pengguna = $penggunaModel->find($dataPost['pengguna_id']);
+
+		// Cek buku yang sama udah ada di peminjamannya belum
+    $cekDuplikat = $peminjamanModel->cekDuplikat($pengguna[0]['pengguna_id'], $dataPost['isbn']);
+		if ($cekDuplikat > 0) {
+			return redirect()->back()->with('error', 'Setiap anggota hanya dapat meminjam satu buku yang sama');
+		}
 
 		$db->transStart();
 
